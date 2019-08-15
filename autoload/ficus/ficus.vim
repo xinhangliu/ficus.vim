@@ -108,7 +108,7 @@ function! s:LoadOptions() abort
     let g:ficus_category_icons['all'] = get(g:ficus_category_icons, 'all', '')
     let g:ficus_tag_icon = get(g:, 'ficus_tag_icon', '')
     let g:ficus_notes_seperator = get(g:, 'ficus_notes_seperator', '-')
-    let g:ficus_date_format = get(g:, 'ficus_date_format', '%Y-%m-%d %H:%M')
+    let g:ficus_date_format = get(g:, 'ficus_date_format', '%Y-%m-%dT%H:%M:%S%z')
     let g:ficus_category_recent_offset_days = get(g:, 'ficus_category_recent_offset_days', 7)
     let g:ficus_category_open_max_level = get(g:, 'ficus_category_open_max_level', 2)
     let g:ficus_note_sort_order = get(g:, 'ficus_note_sort_order', ['title', 0])
@@ -127,7 +127,7 @@ function! s:LoadOptions() abort
     let g:ficus_dir = get(g:, 'ficus_dir', '~/Documents/ficus')
     let g:ficus_dir = substitute(g:ficus_dir, '\v/$', '', '')
     let g:ficus_dir = expand(g:ficus_dir)
-    let g:ficus_note_extention = get(g:, 'ficus_note_extention', 'md')
+    let g:ficus_note_extension = get(g:, 'ficus_note_extension', 'md')
     let g:ficus_delete_command = get(g:, 'ficus_delete_command', 'rm -rf')
     let g:ficus_auto_update_modified_date = get(g:, 'ficus_auto_update_modified_date', 1)
 endfunction
@@ -218,7 +218,7 @@ function! ficus#ficus#CreateNote() abort
         return
     endif
 
-    let note_path = g:ficus_dir . '/' . fname . '.' . g:ficus_note_extention
+    let note_path = g:ficus_dir . '/' . fname . '.' . g:ficus_note_extension
     if filereadable(note_path)
         echohl WarningMsg
         echo 'File already exists!'
@@ -301,7 +301,7 @@ function! ficus#ficus#UpdateModifiedDate() abort
 endfunction
 
 function! ficus#ficus#UpdateData(path) abort
-    for f in glob(a:path . '/*.' . g:ficus_note_extention, 0, 1)
+    for f in glob(a:path . '/*.' . g:ficus_note_extension, 0, 1)
         call ficus#ficus#AddNote(f)
     endfor
 endfunction

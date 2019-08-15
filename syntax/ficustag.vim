@@ -2,5 +2,5 @@ execute 'syntax match FicusTag #\v^\s*' . g:ficus_tag_icon . '.*# contains=Ficus
 
 syntax match FicusTagNoteCount '\v\(\d+\)$' contained
 
-highlight default link FicusTag PreProc
+highlight default link FicusTag Directory
 highlight default link FicusTagNoteCount Comment

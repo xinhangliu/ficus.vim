@@ -40,7 +40,7 @@ with open(vim.eval('a:path'), 'r') as f:
     if not is_find_close:
         data = ''
 
-yaml = YAML()
+yaml = YAML(typ='safe')
 data_dict = yaml.load(data)
 
 if isinstance(data_dict, dict):

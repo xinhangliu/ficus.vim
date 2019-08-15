@@ -131,7 +131,7 @@ function! ficus#view#noteview#Rename() abort
         return
     endif
 
-    let msg = "Confirm renaming: '" . fnamemodify(note.path, ':p:t') . "' -> '" . new_name
+    let msg = "Confirm renaming: '" . fnamemodify(note.path, ':p:t') . "' -> '" . new_name . '.' . g:ficus_note_extension . "'"
     let choice = confirm(msg, "&Yes\n&No", 2)
     if choice == 1
         call note.rename(new_name)

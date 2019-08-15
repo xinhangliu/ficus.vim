@@ -7,6 +7,6 @@ execute 'syntax match FicusCategoryMarker #\v' . markers . '\ze' . icons . '# co
 execute 'syntax match FicusPath #\v' . icons . '@<=([^ ][^/]*/)*# contained conceal'
 syntax match FicusNoteCount '\v\(\d+\)$' contained
 
-highlight default link FicusCategory PreProc
+highlight default link FicusCategory Directory
 highlight default link FicusNoteCount Comment
-highlight default link FicusCategoryMarker Constant
+highlight default link FicusCategoryMarker Special

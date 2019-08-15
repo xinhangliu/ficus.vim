@@ -20,7 +20,7 @@ function! s:Note.parse() abort
 endfunction
 
 function! s:Note.rename(new_name) abort
-    let new_path = fnamemodify(self.path, ':p:h') . '/' . a:new_name
+    let new_path = fnamemodify(self.path, ':p:h') . '/' . a:new_name . '.' . g:ficus_note_extension
     if filereadable(expand(new_path))
         echohl ErrorMsg
             echo 'File already exists!'
