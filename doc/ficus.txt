@@ -1,0 +1,235 @@
+*ficus.txt* Taking notes with plaintext and Vim.
+
+==============================================================================
+CONTENTS                                                       *ficus-contents*
+
+  Introduction ........................................... |ficus-introduction|
+    Folder structure ................................. |ficus-folder-structure|
+    Notes format .......................................... |ficus-note-format|
+  Usage ......................................................... |ficus-usage|
+    Quick start ........................................... |ficus-quick-start|
+    Commands ................................................. |ficus-commands|
+    Mappings ................................................. |ficus-mappings|
+    Options ................................................... |ficus-options|
+  Extension ................................................. |ficus-extension|
+
+==============================================================================
+INTRODUCTION                                               *ficus-introduction*
+
+------------------------------------------------------------------------------
+FOLDER STRUCTRUE                                       *ficus-folder-structure*
+
+------------------------------------------------------------------------------
+NOTES FORMAT                                                 *ficus-note-format*
+
+==============================================================================
+USAGE                                                             *ficus-usage*
+
+------------------------------------------------------------------------------
+QUICK START                                                 *ficus-quick-start*
+
+------------------------------------------------------------------------------
+COMMANDS                                                       *ficus-commands*
+
+:Ficus[!]                                                               *Ficus*
+
+  Open ficus window. Close the opened ficus window if executed with a !.
+
+:FicusToggle                                                      *FicusToggle*
+
+  Toggle ficus window.
+
+:FicusReload                                                      *FicusReload*
+
+  Reload ficus. Data will be updated from all note files.
+
+------------------------------------------------------------------------------
+MAPPINGS                                                       *ficus-mappings*
+
+CategoryView~
+
+  ------------------------------------------------~
+  Key     Description~
+  ------------------------------------------------~
+  h       Collapse the category under cursor.
+  l       Expand the category under cursor.
+  o       Open the category under cursor.
+  u       Go to TagView.
+  R       Rename the category under cursor.
+  C       Create a new note under this category.
+  ------------------------------------------------~
+
+TagView~
+
+  ------------------------------------------------~
+  Key     Description~
+  ------------------------------------------------~
+  o       Open the tag under cursor.
+  u       Go to CategoryView.
+  R       Rename the tag under cursor.
+  C       Create a new note under this tag.
+  st      Sort tags by title.
+  sc      Sort tags by notes count.
+  sr      Reverse the sorting order.
+  ss      Traverse the sorting keys.
+  sS      Traverse the sorting keys conversely.
+  ------------------------------------------------~
+
+NoteView~
+
+  ------------------------------------------------------------------~
+  Key     Description~
+  ------------------------------------------------------------------~
+  o       Open the note in previous window.
+  O       Open the note in split.
+  v       Open the note in vsplit.
+  t       Open the note in new tab.
+  u       Go to CategoryView/TagView.
+  R       Rename the file of the note under cursor.
+  C       Create a new note.
+  D       Delete the file of the note under cursor.
+  st      Sort notes by title.
+  sm      Sort notes by modified date.
+  sc      Sort notes by created date.
+  sr      Reverse the sorting order.
+  ss      Traverse the sorting keys.
+  sS      Traverse the sorting keys conversely.
+  ------------------------------------------------------------------~
+
+------------------------------------------------------------------------------
+OPTIONS                                                         *ficus-options*
+
+*g:ficus_dir*
+  The parent directory of your notes. Ficus.vim only search for note files in
+  this directory (not recursively).
+
+  Default: `'~/Documents/ficus'`
+
+*g:ficus_note_extension*
+  A string sets the default filename extension of note files.
+
+  Default: `md`
+
+*g:ficus_date_format*
+  The format-string used to format date and time. It follows the rules of
+  |strftime()|.
+
+  Default: `'%Y-%m-%dT%H:%M:%S%z'`
+
+  Examples: >
+    let g:ficus_date_format = '%Y-%m-%d %H:%M'  " ==>  2019-08-16 22:44
+<
+*g:ficus_category_open_max_level*
+  A number sets the default maximum level of category opening. All categories
+  are collapsed by default if set to `0`. The top-level categories are opened
+  while the others are collapsed by default if set to `1`, and so on.
+
+  Default: `2`
+
+*g:ficus_category_recent_offset_days*
+  A number sets the offest days of `Recent` category. The notes modified
+  within this number of days are included in the `Recent` category.
+
+  Default: `7`
+
+*g:ficus_winwidth*
+  A number sets the window width of Ficus.
+
+  Default: `35`
+
+*g:ficus_expand_icon*
+  A 3-items |List| sets the icon of category handle. The 1st item is for
+  opened category; The 2nd item is for the collapsed category; The 3th item
+  is for the empty category (both opened and collapsed).
+
+  Default: `['▶', '▼', '  ']`
+
+*g:ficus_icons*
+  A |Dict| sets the icons of different types of categories.
+
+  Default: `{'category': '', 'inbox': '', 'recent': '', 'all': '', 'tag': ''}`
+
+  Examples: >
+    {
+        'category': '',
+        'inbox':    '',
+        'recent':   '',
+        'all':      '',
+        'tag':      '',
+    }
+<
+  Note: The above example requires font support.
+        Nerd Fonts (https://www.nerdfonts.com/) might be a good choice.
+
+*g:ficus_note_sort_order*
+  A 2-items |List| sets the default sort order of notes list. The 1st item
+  sets the sorting `key`; The 2nd item sets the sorting `order`.
+
+  `key` is a string. Allowed values:
+    - `'title'`: Sort by the title of notes
+    - `'created'`: Sort by the created date of notes
+    - `'modified'`: Sort by the modified date of notes
+  `order` is a boolean number:
+    - `0` for ascending
+    - `1` for descending
+
+  Default: `['title', 0]`
+
+*g:ficus_tag_sort_order*
+  A 2-items |List| sets the default sort order of tags. The 1st item sets the
+  sorting `key`; The 2nd item sets the sorting `order`.
+
+  `key` is a string. Allowed values:
+    - `'title'`: Sort by the title of tags
+    - `'count'`: Sort by the notes count of tags
+  `order` is a boolean number:
+    - `0` for ascending
+    - `1` for descending
+
+  Default: `['count', 1]`
+
+*g:ficus_notes_seperator*
+  A character used to construct the seperator of notes list.
+
+  Default: `'-'`
+
+*g:ficus_newnote_header*
+  A string sets the default template of new note creation. The template
+  supports variable passing. If `var` is a valid metadata key of note and
+  currently defined, `{{var}}` will be replaced with the value of the key.
+
+  Default: >
+      "---\n" .
+    \ "title: {{title}}\n" .
+    \ "created: {{created}}\n" .
+    \ "modified: {{modified}}\n" .
+    \ "category: {{category}}\n" .
+    \ "tags: {{tags}}\n" .
+    \ "author: {{author}}\n" .
+    \ "description: {{description}}\n" .
+    \ "---\n"
+
+*g:ficus_delete_command*
+  A string sets the shell command for note file deletion.
+
+  Default: `rm -rf`
+
+  Examples: >
+    let g:ficus_delete_command = 'trash-put'  " Use trash-cli to delete file
+<
+
+  Note: The default value is DANGEROUS.
+
+*g:ficus_auto_update_lastmod*
+  A boolean number determines if auto update the metadata key `modified` when
+  |write| the note to file. `1` for turn on; `0` for turn off.
+
+  Note: Currently auto update lastmod feature only supports Markdown with YAML
+  Front Matter format.
+
+  Default: `0`
+
+==============================================================================
+EXTENSION                                                     *ficus-extension*
+
+vim:tw=78:ts=8:ft=help:norl:
