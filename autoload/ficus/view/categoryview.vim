@@ -1,12 +1,16 @@
+" Function ficus#view#category#GetCursorCategory() {{{1
+" Get category object under cursor.
+" Args:
+" Return:
+"   : Category -> Matched category. If valid category is not found, `{}` is
+"   returned.
 function! ficus#view#categoryview#GetCursorCategory() abort
     let line = getline('.')
-    let markers = '(' . escape(join(g:ficus_expand_icon, '|'), '+-~') . '|  )'
-    let icons = '(' . escape(join(values(g:ficus_category_icons), '|'), '+-~') . ')'
-    let id = matchlist(line, '\v^\s*' . markers . icons . '(.*)\s\(\d+\)$')
+    let id = matchlist(line, '\v^\{\{(.*)\}\}.*$')
     if empty(id)
         return {}
     endif
-    let id = id[3]
+    let id = id[1]
     if id ==# 'S/Inbox'
         return g:Ficus.categoryInbox
     elseif id ==# 'S/Recent'
@@ -18,6 +22,10 @@ function! ficus#view#categoryview#GetCursorCategory() abort
     return category
 endfunction
 
+" Function ficus#view#categoryview#Render() {{{1
+" Render categoryview at current window.
+" Args:
+" Return:
 function! ficus#view#categoryview#Render() abort
     let output = ''
     let output .= g:Ficus.categoryInbox.renderToString(0)
@@ -30,7 +38,11 @@ function! ficus#view#categoryview#Render() abort
     return output
 endfunction
 
-function! ficus#view#categoryview#openFold() abort
+" Function ficus#view#categoryview#Render() {{{1
+" Expand the category under the cursor in current window.
+" Args:
+" Return:
+function! ficus#view#categoryview#OpenFold() abort
     let category = ficus#view#categoryview#GetCursorCategory()
     if empty(category)
         return 0
@@ -43,7 +55,11 @@ function! ficus#view#categoryview#openFold() abort
     call ficus#render#Render('category')
 endfunction
 
-function! ficus#view#categoryview#closeFold() abort
+" Function ficus#view#categoryview#CloseFold() {{{1
+" Collapse the category under the cursor in current window.
+" Args:
+" Return:
+function! ficus#view#categoryview#CloseFold() abort
     let category = ficus#view#categoryview#GetCursorCategory()
     if empty(category)
         return 0
@@ -56,7 +72,11 @@ function! ficus#view#categoryview#closeFold() abort
     call ficus#render#Render('category')
 endfunction
 
-function! ficus#view#categoryview#toggleFold() abort
+" Function ficus#view#categoryview#ToggleFold() {{{1
+" Expand/Collapse the category under the cursor in current window.
+" Args:
+" Return:
+function! ficus#view#categoryview#ToggleFold() abort
     let category = ficus#view#categoryview#GetCursorCategory()
     if empty(category)
         return 0
@@ -66,7 +86,11 @@ function! ficus#view#categoryview#toggleFold() abort
     call ficus#render#Render('category')
 endfunction
 
-function! ficus#view#categoryview#openCategory() abort
+" Function ficus#view#categoryview#OpenCategory() {{{1
+" Open the noteview of the category under the cursor in current window.
+" Args:
+" Return:
+function! ficus#view#categoryview#OpenCategory() abort
     let category = ficus#view#categoryview#GetCursorCategory()
     if empty(category)
         return 0
@@ -78,13 +102,17 @@ function! ficus#view#categoryview#openCategory() abort
     call ficus#render#Render('note')
 endfunction
 
+" Function ficus#view#categoryview#Rename() {{{1
+" Rename the category under the cursor in current window.
+" Args:
+" Return:
 function! ficus#view#categoryview#Rename() abort
     let category = ficus#view#categoryview#GetCursorCategory()
     if empty(category)
         return 0
     endif
 
-    if !category.renamable
+    if category.isRoot()
         echo 'Cannot rename this category.'
         return
     endif
@@ -102,3 +130,6 @@ function! ficus#view#categoryview#Rename() abort
     endif
     call ficus#render#Render('category')
 endfunction
+
+" Modeline {{{1
+" vim:set foldenable foldmethod=marker:

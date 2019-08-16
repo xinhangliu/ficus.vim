@@ -1,6 +1,6 @@
-execute 'syntax match FicusTag #\v^\s*' . g:ficus_tag_icon . '.*# contains=FicusTagNoteCount'
+execute 'syntax match FicusTag /\v^\s*' . escape(g:ficus_icons['tag'], '/') . '.*/ contains=FicusTagNoteCount'
 
-syntax match FicusTagNoteCount '\v\(\d+\)$' contained
+syntax match FicusTagNoteCount '\v \(\d+\)$' contained
 
 highlight default link FicusTag Directory
 highlight default link FicusTagNoteCount Comment

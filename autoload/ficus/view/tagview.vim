@@ -1,6 +1,10 @@
+" Function ficus#view#tagview#GetCursorTag() {{{1
+" Get the tag object under the cursor of current window.
+" Args:
+" Return:
 function! ficus#view#tagview#GetCursorTag() abort
     let line = getline('.')
-    let matched = matchlist(line, '\v^\s*' . g:ficus_tag_icon . '(.*)\s\(\d+\)$')
+    let matched = matchlist(line, '\v^\s*' . g:ficus_icons['tag'] . '(.*)\s\(\d+\)$')
     if empty(matched)
         return {}
     endif
@@ -8,6 +12,13 @@ function! ficus#view#tagview#GetCursorTag() abort
     return g:Ficus.tags.getChild(tagname)
 endfunction
 
+" Function s:CompareTag(tag, other) {{{1
+" Compare the given two tags.
+" Args:
+"   tag: Tag -> The tag.
+"   other: Note -> the other tag.
+" Return:
+"   : number -> 0 if equal, 1 if greater, -1 if less.
 function! s:CompareTag(tag, other) abort
     let ret = 0
     if g:ficus_tag_sort_order[0] ==# 'name'
@@ -22,6 +33,10 @@ function! s:CompareTag(tag, other) abort
     return ret
 endfunction
 
+" Function ficus#view#tagview#Render() {{{1 {{{1
+" Render the tagview.
+" Args:
+" Return:
 function! ficus#view#tagview#Render() abort
     let output = ''
 
@@ -37,7 +52,11 @@ function! ficus#view#tagview#Render() abort
     return output
 endfunction
 
-function! ficus#view#tagview#openTag() abort
+" Function ficus#view#tagview#OpenTag() {{{1
+" Open the noteview of the tag under the cursor.
+" Args:
+" Return:
+function! ficus#view#tagview#OpenTag() abort
     let tag = ficus#view#tagview#GetCursorTag()
     if empty(tag)
         return 0
@@ -49,6 +68,10 @@ function! ficus#view#tagview#openTag() abort
     call ficus#render#Render('note')
 endfunction
 
+" Function ficus#view#tagview#Rename() {{{1
+" Rename the tag under the cursor.
+" Args:
+" Return:
 function! ficus#view#tagview#Rename() abort
     let tag = ficus#view#tagview#GetCursorTag()
     if empty(tag)
@@ -68,3 +91,6 @@ function! ficus#view#tagview#Rename() abort
     endif
     call ficus#render#Render('tag')
 endfunction
+
+" Modeline {{{1
+" vim:set foldenable foldmethod=marker:

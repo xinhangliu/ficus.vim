@@ -1,3 +1,7 @@
+" Function ficus#view#noteview#GetCursorNote() {{{1
+" Get the note object under the cursor of current window.
+" Args:
+" Return:
 function! ficus#view#noteview#GetCursorNote() abort
     let linenr = line('.')
     if getline(linenr) =~# '\v^' . escape(g:ficus_notes_seperator, '+-~') . '+(\d+)?$'
@@ -25,6 +29,13 @@ function! ficus#view#noteview#GetCursorNote() abort
     return {}
 endfunction
 
+" Function s:CompareNote(note, other) {{{1
+" Compare the given two notes.
+" Args:
+"   note: Note -> The note.
+"   other: Note -> the other note.
+" Return:
+"   : number -> 0 if equal, 1 if greater, -1 if less.
 function! s:CompareNote(note, other) abort
     let ret = 0
     if index(['title'], g:ficus_note_sort_order[0]) >= 0
@@ -42,6 +53,11 @@ function! s:CompareNote(note, other) abort
     return ret
 endfunction
 
+" Function ficus#view#noteview#Render(notes) {{{1
+" Render the noteview of the given notes list.
+" Args:
+"   notes: List[Note] -> The notes list to render.
+" Return:
 function! ficus#view#noteview#Render(notes) abort
     let output = repeat(g:ficus_notes_seperator, g:ficus_winwidth) . "\n"
 
@@ -70,6 +86,15 @@ function! ficus#view#noteview#Render(notes) abort
     return output
 endfunction
 
+" Function ficus#view#noteview#OpenNote(flag, stay) {{{1
+" Open the file of the note.
+" Args:
+"   flag: char -> 't' open in newtab,
+"                 'p' open in previous window,
+"                 's' open in split of previous window,
+"                 'v' open in vsplit of previous window.
+"  stay: bool -> Stay in the Ficus window if True after open the note.
+" Return:
 function! ficus#view#noteview#OpenNote(flag, stay) abort
     let note = ficus#view#noteview#GetCursorNote()
     if empty(note)
@@ -106,8 +131,8 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
         endif
     endif
 
-    if g:ficus_auto_update_modified_date
-        call ficus#automatic#AutoUpdateModifiedDate(note)
+    if g:ficus_auto_update_lastmod
+        call ficus#automatic#AutoUpdateLastmod(note)
     endif
 
     call ficus#automatic#AutoUpdateNote(note)
@@ -116,10 +141,18 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
     endif
 endfunction
 
+" Function ficus#view#noteview#GoBack() {{{1
+" Go back to the parent view of current notes list.
+" Args:
+" Return:
 function! ficus#view#noteview#GoBack() abort
     call ficus#render#Render(g:Ficus.current_notes_view)
 endfunction
 
+" Function ficus#view#noteview#Rename() {{{1
+" Rename the filename of the note under the cursor in the current window.
+" Args:
+" Return:
 function! ficus#view#noteview#Rename() abort
     let note = ficus#view#noteview#GetCursorNote()
     if empty(note)
@@ -131,13 +164,19 @@ function! ficus#view#noteview#Rename() abort
         return
     endif
 
-    let msg = "Confirm renaming: '" . fnamemodify(note.path, ':p:t') . "' -> '" . new_name . '.' . g:ficus_note_extension . "'"
+    let msg = "Confirm renaming: '" . fnamemodify(note.path, ':p:t')
+                \. "' -> '" . new_name . '.' . g:ficus_note_extension . "'"
     let choice = confirm(msg, "&Yes\n&No", 2)
     if choice == 1
         call note.rename(new_name)
     endif
 endfunction
 
+" Function ficus#view#noteview#DeleteNote() {{{1
+" Delete the file of note under the cursor.
+" Command of deleting can be specified by option `g:ficus_delete_command`.
+" Args:
+" Return:
 function! ficus#view#noteview#DeleteNote() abort
     let note = ficus#view#noteview#GetCursorNote()
     if empty(note)
@@ -149,7 +188,7 @@ function! ficus#view#noteview#DeleteNote() abort
     if choice == 1
         call system(g:ficus_delete_command . ' ' . shellescape(note.path))
         if v:shell_error == 0
-            call ficus#ficus#RemoveNote(note)
+            call ficus#RemoveNote(note)
             echo 'Note deleted'
         else
             echohl WarningMsg
@@ -159,3 +198,6 @@ function! ficus#view#noteview#DeleteNote() abort
     endif
     call ficus#render#Render('note')
 endfunction
+
+" Modeline {{{1
+" vim:set foldenable foldmethod=marker:

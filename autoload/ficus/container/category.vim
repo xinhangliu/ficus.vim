@@ -1,5 +1,8 @@
+let s:RootCategoryPrefix = 'S/'
+
 let s:Category = {}
 
+" function! ficus#container#category#New(name) abort {{{1
 function! ficus#container#category#New(name) abort
     let newObj = copy(s:Category)
     let newObj.name = a:name
@@ -7,12 +10,11 @@ function! ficus#container#category#New(name) abort
     let newObj.children = []
     let newObj.notes = []
     let newObj.isOpen = 1
-    let newObj.isRoot = 0
-    let newObj.renamable = 1
-    let newObj.icon = g:ficus_category_icons['category']
+    let newObj.icon = g:ficus_icons['category']
     return newObj
 endfunction
 
+" function! s:Category.renderToString(level) abort {{{1
 function! s:Category.renderToString(level) abort
     let marker = g:ficus_expand_icon[0]
     if self.isOpen
@@ -20,11 +22,12 @@ function! s:Category.renderToString(level) abort
     endif
 
     if empty(self.children)
-        let marker = '  '
+        let marker = g:ficus_expand_icon[2]
     endif
 
-    let sep = strwidth(marker) == 2 ? '' : ' '
-    let output = repeat('  ', a:level) . marker . sep . self.icon . self.id()
+        let id = self.isRoot() ? s:RootCategoryPrefix . self.id() : self.id()
+    let output = '{{' . id . '}}'
+                \. repeat('  ', a:level) . marker . self.icon . self.name
                 \. ' (' . self.notesCount() . ')' . "\n"
     if self.isOpen
         for child in self.children
@@ -35,6 +38,7 @@ function! s:Category.renderToString(level) abort
     return output
 endfunction
 
+" function! s:Category.renderNotes() abort {{{1
 function! s:Category.renderNotes() abort
     let output = ''
     for note in self.notes
@@ -43,22 +47,32 @@ function! s:Category.renderNotes() abort
     return output
 endfunction
 
+function! s:Category.isRoot() abort
+    if empty(self.parent)
+        return 1
+    endif
+    return 0
+endfunction
+
+" function! s:Category.id() abort {{{1
 function! s:Category.id() abort
     return join(self.idList(), '/')
 endfunction
 
+" function! s:Category.idList() abort {{{1
 function! s:Category.idList() abort
     let parent = self.parent
     let idlist = [self.name]
-    while !empty(parent) && !parent.isRoot
+    while !empty(parent) && !parent.isRoot()
         call add(idlist, parent.name)
         let parent = parent.parent
     endwhile
     return reverse(idlist)
 endfunction
 
+" function! s:Category.rename(new_name) abort {{{1
 function! s:Category.rename(new_name) abort
-    if !self.renamable
+    if self.isRoot()
         return
     endif
     if self.name ==# a:new_name
@@ -80,6 +94,7 @@ function! s:Category.rename(new_name) abort
     endif
 endfunction
 
+" function! s:Category._updateDescendantNotes() abort {{{1
 function! s:Category._updateDescendantNotes() abort
     let idlist = self.idList()
     for note in self.notes
@@ -92,6 +107,7 @@ function! s:Category._updateDescendantNotes() abort
     endfor
 endfunction
 
+" function! s:Category.findChildByID(id) abort {{{1
 function! s:Category.findChildByID(id) abort
     let id = a:id
     if type(id) == 1
@@ -112,6 +128,7 @@ function! s:Category.findChildByID(id) abort
     return parent
 endfunction
 
+" function! s:Category.addChild(child) abort {{{1
 function! s:Category.addChild(child) abort
     call add(self.children, a:child)
     let a:child.parent = self
@@ -126,10 +143,12 @@ function! s:Category.removeChild(child) abort
     return {}
 endfunction
 
+" function! s:Category.addNote(note) abort {{{1
 function! s:Category.addNote(note) abort
     call add(self.notes, a:note)
 endfunction
 
+" function! s:Category.removeNote(note) abort {{{1
 function! s:Category.removeNote(note) abort
     for idx in range(self.notesCount())
         if self.notes[idx].path == a:note.path
@@ -139,6 +158,7 @@ function! s:Category.removeNote(note) abort
     return {}
 endfunction
 
+" function! s:Category.getChild(name) abort {{{1
 function! s:Category.getChild(name) abort
     for child in self.children
         if child.name ==# a:name
@@ -148,14 +168,17 @@ function! s:Category.getChild(name) abort
     return {}
 endfunction
 
+" function! s:Category.childrenCount() abort {{{1
 function! s:Category.childrenCount() abort
     return len(self.children)
 endfunction
 
+" function! s:Category.notesCount() abort {{{1
 function! s:Category.notesCount() abort
     return len(self.notes)
 endfunction
 
+" function! s:Category.getNote(path) abort {{{1
 function! s:Category.getNote(path) abort
     for note in self.notes
         if note.path ==# a:path
@@ -164,3 +187,5 @@ function! s:Category.getNote(path) abort
     endfor
     return {}
 endfunction
+
+" vim:set foldenable foldmethod=marker:

@@ -1,19 +1,22 @@
 let s:Tag = {}
 
+" function! ficus#container#tag#New(name) abort {{{1
 function! ficus#container#tag#New(name) abort
     let newObj = copy(s:Tag)
     let newObj.name = a:name
     let newObj.notes = []
-    let newObj.icon = g:ficus_tag_icon
+    let newObj.icon = g:ficus_icons['tag']
     return newObj
 endfunction
 
+" function! s:Tag.renderToString() abort {{{1
 function! s:Tag.renderToString() abort
     let output = '  ' . self.icon . self.name . ' (' . self.notesCount() . ')' . "\n"
 
     return output
 endfunction
 
+" function! s:Tag.rename(new_name) abort {{{1
 function! s:Tag.rename(new_name) abort
     if self.name ==# a:new_name
         return
@@ -42,10 +45,12 @@ function! s:Tag.rename(new_name) abort
     endif
 endfunction
 
+" function! s:Tag.addNote(note) abort {{{1
 function! s:Tag.addNote(note) abort
     call add(self.notes, a:note)
 endfunction
 
+" function! s:Tag.removeNote(note) abort {{{1
 function! s:Tag.removeNote(note) abort
     for idx in range(self.notesCount())
         if self.notes[idx].path == a:note.path
@@ -55,10 +60,12 @@ function! s:Tag.removeNote(note) abort
     return {}
 endfunction
 
+" function! s:Tag.notesCount() abort {{{1
 function! s:Tag.notesCount() abort
     return len(self.notes)
 endfunction
 
+" function! s:Tag.getNote(path) abort {{{1
 function! s:Tag.getNote(path) abort
     for note in self.notes
         if note.path ==# a:path
@@ -67,3 +74,5 @@ function! s:Tag.getNote(path) abort
     endfor
     return {}
 endfunction
+
+" vim:set foldenable foldmethod=marker:

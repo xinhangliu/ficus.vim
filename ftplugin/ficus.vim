@@ -23,11 +23,11 @@ setlocal foldmethod&
 setlocal foldexpr&
 
 nnoremap <script> <silent> <buffer> <2-LeftMouse>
-            \ :<c-u>call ficus#view#categoryview#toggleFold()<CR>
-nnoremap <silent> <buffer> h :<c-u>call ficus#view#categoryview#closeFold()<CR>
-nnoremap <silent> <buffer> l :<C-U>call ficus#view#categoryview#openFold()<CR>
-nnoremap <silent> <buffer> o :<C-u>call ficus#view#categoryview#openCategory()<CR>
+            \ :<c-u>call ficus#view#categoryview#ToggleFold()<CR>
+nnoremap <silent> <buffer> h :<c-u>call ficus#view#categoryview#CloseFold()<CR>
+nnoremap <silent> <buffer> l :<C-U>call ficus#view#categoryview#OpenFold()<CR>
+nnoremap <silent> <buffer> o :<C-u>call ficus#view#categoryview#OpenCategory()<CR>
 nnoremap <silent> <buffer> u :<C-U>call ficus#render#Render('tag')<CR>
 
 nnoremap <silent> <buffer> R :<C-u>call ficus#view#categoryview#Rename()<CR>
-nnoremap <silent> <buffer> C :<C-u>call ficus#ficus#CreateNote()<CR>
+nnoremap <silent> <buffer> C :<C-u>call ficus#CreateNote()<CR>

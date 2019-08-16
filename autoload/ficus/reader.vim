@@ -10,7 +10,8 @@ function! ficus#reader#MarkdownReader(path) abort
 python3 << EOF
 import re
 import vim
-from ruamel.yaml import YAML
+from ruamel.yaml import YAML, SafeConstructor, VersionedResolver, resolver
+
 re_empty = re.compile(r'^\s+')
 re_open = re.compile(r'^---\s*')
 re_close = re.compile(r'^---\s*')
@@ -40,7 +41,28 @@ with open(vim.eval('a:path'), 'r') as f:
     if not is_find_close:
         data = ''
 
+
+class NoDateResolver(VersionedResolver):
+    def __init__(self, version=None, loader=None, loadumper=None):
+        super().__init__(version, loader, loadumper)
+
+    @property
+    def versioned_resolver(self):
+        # type: () -> Any
+        """
+        select the resolver based on the version we are parsing
+        """
+        version = self.processing_version
+        if version not in self._version_implicit_resolver:
+            for x in resolver.implicit_resolvers:
+                if version in x[0] and x[1] != u'tag:yaml.org,2002:timestamp':
+                    self.add_version_implicit_resolver(version, x[1], x[2], x[3])
+        return self._version_implicit_resolver[version]
+
+
 yaml = YAML(typ='safe')
+yaml.Resolver = NoDateResolver
+
 data_dict = yaml.load(data)
 
 if isinstance(data_dict, dict):
