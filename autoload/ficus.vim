@@ -91,7 +91,7 @@ function! s:Init() abort
     let g:Ficus.categoryRoot = ficus#container#category#New('Root')
     let g:Ficus.tags = ficus#container#category#New('Tags')
 
-    let g:Ficus.buffer_name = '^\[ficus\]$'
+    let g:Ficus.buffer_name = '__ficus__'
     let g:Ficus.outdated = 0
     let g:Ficus.next_note_id = 0
     let g:Ficus.opened_notes = []
@@ -274,7 +274,6 @@ function! ficus#CreateNote() abort
     let header = substitute(header, '\v\{\{modified\}\}', date, 'g')
     let header = substitute(header, '\v\{\{[^\{\}]+\}\}', '', 'g')
 
-    echom header
     call writefile(split(header, "\n"), note_path)
     call s:AddNote(note_path)
     call s:UpdateView()

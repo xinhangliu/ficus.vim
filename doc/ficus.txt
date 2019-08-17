@@ -165,53 +165,53 @@ MAPPINGS                                                       *ficus-mappings*
 
 CategoryView~
 
-  ------------------------------------------------~
+  --------------------------------------------------------~
   Key     Description~
-  ------------------------------------------------~
-  h       Collapse the category under cursor.
-  l       Expand the category under cursor.
-  o       Open the category under cursor.
+  --------------------------------------------------------~
+  h       Collapse the category under the cursor.
+  l       Expand the category under the cursor.
+  o       Open the category under the cursor.
   u       Go to TagView.
-  R       Rename the category under cursor.
+  R       Rename the category under the cursor.
   C       Create a new note under this category.
-  ------------------------------------------------~
+  --------------------------------------------------------~
 
 TagView~
 
-  ------------------------------------------------~
+  --------------------------------------------------------~
   Key     Description~
-  ------------------------------------------------~
-  o       Open the tag under cursor.
+  --------------------------------------------------------~
+  o       Open the tag under the cursor.
   u       Go to CategoryView.
-  R       Rename the tag under cursor.
+  R       Rename the tag under the cursor.
   C       Create a new note under this tag.
   st      Sort tags by title.
   sc      Sort tags by notes count.
   sr      Reverse the sorting order.
   ss      Traverse the sorting keys.
   sS      Traverse the sorting keys conversely.
-  ------------------------------------------------~
+  --------------------------------------------------------~
 
 NoteView~
 
-  ------------------------------------------------------------------~
+  --------------------------------------------------------~
   Key     Description~
-  ------------------------------------------------------------------~
+  --------------------------------------------------------~
   o       Open the note in previous window.
   O       Open the note in split.
   v       Open the note in vsplit.
   t       Open the note in new tab.
   u       Go to CategoryView/TagView.
-  R       Rename the file of the note under cursor.
+  R       Rename the file of the note under the cursor.
   C       Create a new note.
-  D       Delete the file of the note under cursor.
+  D       Delete the file of the note under the cursor.
   st      Sort notes by title.
   sm      Sort notes by modified date.
   sc      Sort notes by created date.
   sr      Reverse the sorting order.
   ss      Traverse the sorting keys.
   sS      Traverse the sorting keys conversely.
-  ------------------------------------------------------------------~
+  --------------------------------------------------------~
 
 ------------------------------------------------------------------------------
 OPTIONS                                                         *ficus-options*
