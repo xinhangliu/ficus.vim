@@ -4,7 +4,11 @@
 
 **⚠️ This project is still a work in progress, use at your own risk.**
 
-<!-- TODO: screenshot/gif/video -->
+![CategoryView](https://user-images.githubusercontent.com/21138560/63208187-b65b2500-c103-11e9-8ccc-920ada8635e7.png)
+
+![TagView](https://user-images.githubusercontent.com/21138560/63208194-c541d780-c103-11e9-96a1-eda8b359d4d1.png)
+
+![NoteView](https://user-images.githubusercontent.com/21138560/63208198-ca068b80-c103-11e9-9118-fa1313c8334d.png)
 
 ## Introduction
 
@@ -77,7 +81,37 @@ Plug 'xinhangliu/ficus.vim'
 
 ## Quick Start
 
-<!-- TODO: quick start -->
+Configure ficus.vim in your `.vimrc`. The default library path is
+`~/Documents/ficus`, you can override it with `g:ficus_dir` option. Read the docs
+for more options.
+
+Type `:Ficus` and then press return in vim normal mode to open the ficus window.
+Window can be closed by command `:Ficus!`.
+
+For convenience, you can put this line in your `.vimrc` to easily toggle ficus
+window:
+
+```vim
+nnoremap <Leader>[ :FicusToggle<CR>
+```
+
+There are 3 views in ficus window:
+  - CategoryView: Show the category tree
+  - TagView: Show the tags list
+  - NoteView: Show the notes list of the category/tag
+
+All the views has similar keybindings. For example:
+  - Switch between views: `u`
+  - Open the category/tag/note: `o`
+  - Create new note: `C`
+  - Rename the category/tag/note: `R`
+
+Different views have some unique keybindings. For example:
+  - Collapse/expand category in CategoryView: `h/l`
+  - Sort notes by title/created/modified in NoteView: `st/sc/sm`
+  - Sort tags by name/count in TagView: `st/sc`
+
+see more details in docs.
 
 ## Companions
 
