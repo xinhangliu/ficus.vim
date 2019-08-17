@@ -3,30 +3,147 @@
 ==============================================================================
 CONTENTS                                                       *ficus-contents*
 
-  Introduction ........................................... |ficus-introduction|
-    Folder structure ................................. |ficus-folder-structure|
-    Notes format .......................................... |ficus-note-format|
-  Usage ......................................................... |ficus-usage|
-    Quick start ........................................... |ficus-quick-start|
-    Commands ................................................. |ficus-commands|
-    Mappings ................................................. |ficus-mappings|
-    Options ................................................... |ficus-options|
-  Extension ................................................. |ficus-extension|
+  Introduction.............................................|ficus-introduction|
+    Folder structure...................................|ficus-folder-structure|
+    Notes format............................................|ficus-note-format|
+    Requirements...........................................|ficus-requirements|
+  Usage...........................................................|ficus-usage|
+    Quick start.............................................|ficus-quick-start|
+    Commands...................................................|ficus-commands|
+    Mappings...................................................|ficus-mappings|
+    Options.....................................................|ficus-options|
+  Extension...................................................|ficus-extension|
 
 ==============================================================================
 INTRODUCTION                                               *ficus-introduction*
 
+Ficus.vim is a note-taking app standing on the shoulder of vim.
+
 ------------------------------------------------------------------------------
 FOLDER STRUCTRUE                                       *ficus-folder-structure*
 
+Ficus.vim is flat-file based, which only requires a folder to store your
+notes. Folder structure is more like this:
+>
+    /path/to/your/library
+    ├── assets/
+    ├── note-1.md
+    ├── note-2.md
+    └── ...
+>
+Ficus.vim searchs for notes under this folder (not recursively). The
+attachments can be stored in `assets/` or anywhere your like. But Keep them
+close to your notes is more convenient for referencing.
+
+You can custom the library path by |g:ficus_dir| option.
+
+Advantages:
+    1. links to attachments/notes works in any situation. You can jump to the
+       note under the cursor with |gf| in vim. Other tools can find the
+       attachments without problem.
+    2. Putting all notes within the same folder can shorten the link length.
+       They can be easily autocompleted with |i_CTRL-X_CTRL-F| in vim.
+
 ------------------------------------------------------------------------------
-NOTES FORMAT                                                 *ficus-note-format*
+NOTES FORMAT                                                *ficus-note-format*
+
+Every notes has metadata and content. The metadata provides information about
+the note. The following metadata keys (case-sensitive) are required:
+
+  title~
+    Title of note.
+
+  created~
+    Created date of note.
+
+  modified~
+    Last modification date of note.
+
+  category~
+    Category of note. For instance, `cate-A/cate-B` means note belongs to
+    category `cate-B` which is a subcategory of category `cate-A`. Note can only
+    belong to one category, but categories can be nested infinitely.
+
+  tags~
+    A list of tags of note. Note can own multiple tags.
+
+  author~
+    Author of note.
+
+  description~
+    Description of note.
+
+Custom keys are allowed, they are just ignored by ficus.vim.
+
+Currently, ficus.vim supports Markdown. Metadata and content are stored in
+same file. Metadata is stored in YAML Front Matter:
+>
+    /path/to/your/library/note-1.md:
+    ---
+    title: This is the title
+    created: 2019-08-15T22:22:22+0800
+    modified: 2019-08-15T22:22:59+0800
+    category: categoryA/subcategory/...
+    tags: [tag1, tag2, ...]
+    author: Name
+    description: This is the description
+    ---
+
+    Note content goes here ...
+<
+  Note: YAML Front Matter must be at the exact beginning of the file.
+
+Section |ficus-extension| describes how to support other languages.
+
+------------------------------------------------------------------------------
+REQUIREMENTS                                               *ficus-requirements*
+
+- vim 8
+- Python3
+  - ruamel.yaml
+
+Currently, ficus.vim supports Markdown as note-taking language. python package
+`ruamel.yaml` is required for read&write notes' metadata (YAML Front Matter).
 
 ==============================================================================
 USAGE                                                             *ficus-usage*
 
 ------------------------------------------------------------------------------
 QUICK START                                                 *ficus-quick-start*
+
+  STEP 1~
+    Configure ficus.vim in your `.vimrc`. The default library path is
+    `~/Documents/ficus`, you can override it with |g:ficus_dir| option. Read
+    section |ficus-options| for more options.
+
+  STEP 2~
+    Type `:Ficus` and then press return in vim normal mode to open the ficus
+    window. Window can be closed by command `:Ficus!`.
+
+    For convenience, you can put this line in your `.vimrc` to easily toggle
+    ficus window: >
+      nnoremap <Leader>[ :FicusToggle<CR>
+<
+    While, the default <Leader> key is usually `\`.
+
+  STEP 3~
+    There are 3 views in ficus window:
+      - CategoryView: Show the category tree
+      - TagView: Show the tags list
+      - NoteView: Show the notes list of the category/tag
+
+    All the views has similar keybindings. For example:
+      - Switch between views: `u`
+      - Open the category/tag/note: `o`
+      - Create new note: `C`
+      - Rename the category/tag/note: `R`
+
+    Different views have some unique keybindings. For example:
+      - Collapse/expand category in CategoryView: `h/l`
+      - Sort notes by title/created/modified in NoteView: `st/sc/sm`
+      - Sort tags by name/count in TagView: `st/sc`
+
+    see details in section |ficus-mappings|.
 
 ------------------------------------------------------------------------------
 COMMANDS                                                       *ficus-commands*
@@ -100,13 +217,13 @@ NoteView~
 OPTIONS                                                         *ficus-options*
 
 *g:ficus_dir*
-  The parent directory of your notes. Ficus.vim only search for note files in
+  The parent directory of your notes. Ficus.vim only searchs for note files in
   this directory (not recursively).
 
   Default: `'~/Documents/ficus'`
 
 *g:ficus_note_extension*
-  A string sets the default filename extension of note files.
+  A |string| sets the default filename extension of note files.
 
   Default: `md`
 
@@ -120,20 +237,20 @@ OPTIONS                                                         *ficus-options*
     let g:ficus_date_format = '%Y-%m-%d %H:%M'  " ==>  2019-08-16 22:44
 <
 *g:ficus_category_open_max_level*
-  A number sets the default maximum level of category opening. All categories
+  A |number| sets the default maximum level of category opening. All categories
   are collapsed by default if set to `0`. The top-level categories are opened
   while the others are collapsed by default if set to `1`, and so on.
 
   Default: `2`
 
 *g:ficus_category_recent_offset_days*
-  A number sets the offest days of `Recent` category. The notes modified
+  A |number| sets the offest days of `Recent` category. The notes modified
   within this number of days are included in the `Recent` category.
 
   Default: `7`
 
 *g:ficus_winwidth*
-  A number sets the window width of Ficus.
+  A |number| sets the window width of Ficus.
 
   Default: `35`
 
@@ -194,7 +311,7 @@ OPTIONS                                                         *ficus-options*
   Default: `'-'`
 
 *g:ficus_newnote_header*
-  A string sets the default template of new note creation. The template
+  A |string| sets the default template of new note creation. The template
   supports variable passing. If `var` is a valid metadata key of note and
   currently defined, `{{var}}` will be replaced with the value of the key.
 
@@ -210,7 +327,7 @@ OPTIONS                                                         *ficus-options*
     \ "---\n"
 
 *g:ficus_delete_command*
-  A string sets the shell command for note file deletion.
+  A |string| sets the shell command for note file deletion.
 
   Default: `rm -rf`
 
@@ -221,7 +338,7 @@ OPTIONS                                                         *ficus-options*
   Note: The default value is DANGEROUS.
 
 *g:ficus_auto_update_lastmod*
-  A boolean number determines if auto update the metadata key `modified` when
+  A |boolean| number determines if auto update the metadata key `modified` when
   |write| the note to file. `1` for turn on; `0` for turn off.
 
   Note: Currently auto update lastmod feature only supports Markdown with YAML
@@ -229,7 +346,66 @@ OPTIONS                                                         *ficus-options*
 
   Default: `0`
 
+*g:FicusCustomReader*
+  A |string| sets the name of default reader function. It's used to read
+  metadata from note files.
+
+  Args:
+    `path`: |string| -> The absolute path of the note.
+
+  Return:
+    : |Dict| -> The metadata of the note.
+
+  Default: `ficus#reader#MarkdownReader`
+
+*g:FicusCustomWriter*
+  A |string| sets the name of default writer function. It's used to write
+  metadata to note files. Required metadata keys and the note path is
+  contained in.
+
+  Args:
+    `note`: |Dict| -> The object represents the note.
+
+  Return: None
+
+  Default: `ficus#writer#MarkdownWriter`
+
 ==============================================================================
 EXTENSION                                                     *ficus-extension*
+
+Support other languages is possible. The key step is to tell ficus.vim how to
+obtain/put metadata from/to note file.
+
+Take support for reStructuredText (http://docutils.sourceforge.net/rst.html)
+as an example.
+
+  STEP 1~
+    Find a way to store the metadata. reStructuredText has a directive `meta`
+    (http://docutils.sourceforge.net/docs/ref/rst/directives.html#meta) which
+    can be used to store metadata.
+
+    For example: >
+      .. meta::
+         :description: The reStructuredText plaintext markup language
+         :keywords: plaintext, markup language
+<
+  STEP 2~
+    Implement the reader function, override the |g:FicusCustomReader| option
+    with the name of it. This function should take one argument, which is the
+    absolute path of the target note file. Then extract values of required
+    metadata keys. Finally return them as a |Dict|.
+
+  STEP 3~
+    Implement the writer function, override the |g:FicusCustomWriter| option
+    with the name of it. This function should take one argument, ficus.vim
+    will pass the note object to it, metadata and note path is contained in.
+    Then update the note file's metadata part with object's metadata.
+
+    Note: Pay attention to keep the custom keys and the order of keys.
+
+  STEP 4~
+    Override the |g:ficus_note_extension| option. `rst` for reStructuredText.
+
+    Override the |g:ficus_newnote_header| option.
 
 vim:tw=78:ts=8:ft=help:norl:
