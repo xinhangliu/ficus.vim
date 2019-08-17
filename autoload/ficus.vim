@@ -181,7 +181,7 @@ function! s:AddNote(path) abort
     let current_date = strftime(g:ficus_date_format, localtime()
                 \ - g:ficus_category_recent_offset_days * 24 * 60 * 60)
     if !empty(note.modified)
-                \ && ficus#util#CompareDate(note.modified, current_date, g:ficus_date_format)
+                \ && ficus#util#CompareDate(note.modified, current_date, g:ficus_date_format) > 0
         call g:Ficus.categoryRecent.addNote(note)
     endif
 endfunction
