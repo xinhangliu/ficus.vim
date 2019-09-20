@@ -1,7 +1,7 @@
 scriptencoding utf-8
 
 " Global variables {{{1
-let g:ficus_expand_icon = get(g:, 'ficus_expand_icon', ['▶', '▼', '  '])
+let g:ficus_expand_icon = get(g:, 'ficus_expand_icon', ['▶ ', '▼ ', '  '])
 let g:ficus_icons = get(g:, 'ficus_icons', {})
 let g:ficus_icons['category'] = get(g:ficus_icons, 'category', '')
 let g:ficus_icons['inbox'] = get(g:ficus_icons, 'inbox', '')
