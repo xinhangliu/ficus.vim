@@ -38,7 +38,7 @@ function! ficus#view#categoryview#Render() abort
     return output
 endfunction
 
-" Function ficus#view#categoryview#Render() {{{1
+" Function ficus#view#categoryview#OpenFold() {{{1
 " Expand the category under the cursor in current window.
 " Args:
 " Return:

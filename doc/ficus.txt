@@ -259,7 +259,7 @@ OPTIONS                                                         *ficus-options*
   opened category; The 2nd item is for the collapsed category; The 3th item
   is for the empty category (both opened and collapsed).
 
-  Default: `['▶', '▼', '  ']`
+  Default: `['▶ ', '▼ ', '  ']`
 
 *g:ficus_icons*
   A |Dict| sets the icons of different types of categories.
@@ -268,11 +268,11 @@ OPTIONS                                                         *ficus-options*
 
   Examples: >
     {
-        'category': '',
-        'inbox':    '',
-        'recent':   '',
-        'all':      '',
-        'tag':      '',
+        'category': ' ',
+        'inbox':    ' ',
+        'recent':   ' ',
+        'all':      ' ',
+        'tag':      ' ',
     }
 <
   Note: The above example requires font support.
@@ -290,7 +290,7 @@ OPTIONS                                                         *ficus-options*
     - `0` for ascending
     - `1` for descending
 
-  Default: `['title', 0]`
+  Default: `['modified', 1]`
 
 *g:ficus_tag_sort_order*
   A 2-items |List| sets the default sort order of tags. The 1st item sets the
