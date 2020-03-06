@@ -59,8 +59,6 @@ will just work when you open it with other tools.
 Every note only belongs to one category.
 - **Tag system**: Organize your notes with a flat tag structure. Every note can
 own multiple tags.
-- **Unlimited**: Ficus.vim currently supports Markdown only, but it can be
-easily extended to support other markup languages.
 
 ## Installation
 
@@ -112,14 +110,3 @@ Different views have some unique keybindings. For example:
   - Sort tags by name/count in TagView: `st/sc`
 
 see more details in docs.
-
-## Companions
-
-Ficus.vim keeps this idea in mind: do one thing, let other plugins do more.
-
-- [vim-pandoc](https://github.com/vim-pandoc/vim-pandoc): Export markdown to varies format
-- [vim-pandoc-syntax](https://github.com/vim-pandoc/vim-pandoc-syntax): Better Markdown syntax highlight
-- [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim): Instant markdown preview
-- [vim-instant-markdown](https://github.com/suan/vim-instant-markdown): Instant markdown preview
-- [vim-markdown-wiki](https://github.com/mmai/vim-markdown-wiki): Ease links manipulation and navigation
-- [vista.vim](https://github.com/liuchengxu/vista.vim): Section navigation
