@@ -1,5 +1,5 @@
 syntax match FicusNoteTitle '\v^.*$'
-syntax match FicusNoteSeperator '\v^\-+(\d+)?$' contains=FicusNoteID
+execute 'syntax match FicusNoteSeperator /\v^\' . g:ficus_notes_seperator . '+(\d+)?$/ contains=FicusNoteID'
 execute 'syntax match FicusNoteID #\v\d# contained conceal cchar=' . g:ficus_notes_seperator
 syntax match FicusNoteTags '\v^(#[^\s].*)+$'
 syntax match FicusNoteModified '\v^\* .*$'
