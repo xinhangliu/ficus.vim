@@ -5,6 +5,8 @@ syntax match FicusNoteTags '\v^(#[^\s].*)+$'
 syntax match FicusNoteModified '\v^\* .*$'
 syntax match FicusNoteDescription '\v^\> .*$'
 
+highlight clear Conceal
+
 " highlight! link Conceal Comment
 highlight default link FicusNoteSeperator Comment
 highlight default link Conceal Comment
