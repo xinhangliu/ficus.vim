@@ -38,6 +38,20 @@ function! s:Category.renderToString(level) abort
     return output
 endfunction
 
+function! s:Category.renderToStringList(...) abort
+    if a:0 > 0
+        let prefix = a:1 . '/' . self.name
+    else
+        let prefix = self.name
+    endif
+    let out = [prefix]
+    for child in self.children
+        let out = out + child.renderToStringList(prefix)
+    endfor
+
+    return out
+endfunction
+
 " function! s:Category.renderNotes() abort {{{1
 function! s:Category.renderNotes() abort
     let output = ''
