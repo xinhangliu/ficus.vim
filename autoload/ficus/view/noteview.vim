@@ -4,18 +4,18 @@
 " Return:
 function! ficus#view#noteview#GetCursorNote() abort
     let linenr = line('.')
-    if getline(linenr) =~# '\v^' . escape(ficus#options('ficus_notes_seperator'), '+-~') . '+(\d+)?$'
+    if getline(linenr) =~# '\v^' . escape(ficus#options('ficus_notes_seperator'), '+-~') . '+$'
         return {}
     endif
 
     let id = -1
-    while linenr <= line('$')
-        let linenr += 1
-        let matched = matchlist(getline(linenr), '\v^\-+(\d+)$')
+    while linenr >= 1
+        let matched = matchlist(getline(linenr), '\v^\[(\d+)\].*$')
         if !empty(matched)
             let id = str2nr(matched[1])
             break
         endif
+        let linenr -= 1
     endwhile
     if id == -1
         return {}
@@ -68,19 +68,15 @@ function! ficus#view#noteview#Render(notes) abort
     endif
 
     for note in notes
-        let output .= note.title . "\n"
+        let output .= '[' . note.id . ']' . note.title . "\n"
         if !empty(note.description)
             let output .= '> ' . note.description . "\n"
         endif
         let output .= '* ' . note.modified . "\n"
-        let tag_str = ''
-        for tag in note.tags
-            let tag_str .= '#' . tag . ' '
-        endfor
-        if !empty(tag_str)
-            let output .= tag_str . "\n"
+        if !empty(note.tags)
+            let output .= '#' . join(note.tags, ' #') . "\n"
         endif
-        let output .= repeat(ficus#options('ficus_notes_seperator'), ficus#options('ficus_winwidth') - len(note.id)) . note.id . "\n"
+        let output .= repeat(ficus#options('ficus_notes_seperator'), ficus#options('ficus_winwidth')) . "\n"
     endfor
 
     return output

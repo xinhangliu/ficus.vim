@@ -1,16 +1,13 @@
-syntax match FicusNoteTitle '\v^.*$'
-execute 'syntax match FicusNoteSeperator /\v^\' . ficus#options('ficus_notes_seperator') . '+(\d+)?$/ contains=FicusNoteID'
-execute 'syntax match FicusNoteID #\v\d# contained conceal cchar=' . ficus#options('ficus_notes_seperator')
-syntax match FicusNoteTags '\v^(#[^\s].*)+$'
+syntax region FicusNoteTitle matchgroup=FicusNoteID start='\v^\[\d+\]' end='$' concealends
+execute 'syntax match FicusNoteSeperator /\v^\' . ficus#options('ficus_notes_seperator') . '+(\d+)?$/'
+syntax match FicusNoteTagLine '\v^(#[^#]*)+$' contains=FicusNoteTag
+syntax match FicusNoteTag '\v#[^#]*\ze #' contained
+syntax match FicusNoteTag '\v#[^#]*$' contained
 syntax match FicusNoteModified '\v^\* .*$'
 syntax match FicusNoteDescription '\v^\> .*$'
 
-highlight clear Conceal
-
-" highlight! link Conceal Comment
 highlight default link FicusNoteSeperator Comment
-highlight default link Conceal Comment
 highlight default link FicusNoteTitle Title
-highlight default link FicusNoteTags Keyword
-highlight default link FicusNoteModified Special
+highlight default link FicusNoteTag TabLine
+highlight default link FicusNoteModified Comment
 highlight default link FicusNoteDescription Normal

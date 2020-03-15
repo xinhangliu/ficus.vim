@@ -8,7 +8,7 @@ setlocal nomodifiable
 setlocal textwidth=0
 setlocal winfixwidth
 setlocal wrap
-setlocal concealcursor=nvc conceallevel=1
+setlocal concealcursor=nvc conceallevel=2
 
 setlocal nolist
 setlocal nospell
@@ -21,6 +21,9 @@ setlocal nofoldenable
 setlocal foldcolumn=0
 setlocal foldmethod&
 setlocal foldexpr&
+
+nnoremap <silent> <buffer> h <Left>
+nnoremap <silent> <buffer> l <Right>
 
 nnoremap <silent> <buffer> o :<C-u>call ficus#view#noteview#OpenNote('p', 0)<CR>
 nnoremap <silent> <buffer> p :<C-u>call ficus#view#noteview#OpenNote('p', 1)<CR>
