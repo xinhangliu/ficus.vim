@@ -13,6 +13,8 @@ CONTENTS                                                       *ficus-contents*
     Mappings...................................................|ficus-mappings|
     Options.....................................................|ficus-options|
   Extension...................................................|ficus-extension|
+  INTEGRATION...............................................|ficus-integration|
+    fzf.................................................|ficus-integration-fzf|
 
 ==============================================================================
 INTRODUCTION                                               *ficus-introduction*
@@ -407,5 +409,35 @@ as an example.
     Override the |g:ficus_note_extension| option. `rst` for reStructuredText.
 
     Override the |g:ficus_newnote_header| option.
+
+==============================================================================
+INTEGRATION                                                 *ficus-integration*
+
+------------------------------------------------------------------------------
+FZF                                                     *ficus-integration-fzf*
+
+Requirement: https://github.com/junegunn/fzf
+
+*ficus#fzf#categories(...)*
+  This function launches fzf to select a category. It accepts one optional
+  |Boolean| argument `bang`, if true, it starts fzf in fullscreen mode.
+
+*ficus#fzf#notes(...)*
+  This function launches fzf to select notes. It accepts one optional
+  |Boolean| argument `bang`, if true, it starts fzf in fullscreen mode.
+  Markdown-style link (`[title](path)`) will be inserted into the current
+  buffer. If multiple notes is selected, a markdown-style list of links will
+  be inserted.
+
+  Additional actions:
+    - <C-t>: Only insert the title
+    - <C-p>: Only insert the path
+
+*ficus#fzf#tags(...)*
+  This function launches fzf to select tags. It accepts one optional |Boolean|
+  argument `bang`, if true, it starts fzf in fullscreen mode.  The comma-space
+  separated tags will be inserted into the current buffer.
+
+Tips: For better experience, map the functions to custom keys.
 
 vim:tw=78:ts=8:ft=help:norl:
