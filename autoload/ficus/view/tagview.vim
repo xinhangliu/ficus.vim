@@ -52,12 +52,13 @@ function! ficus#view#tagview#Render() abort
     return output
 endfunction
 
-" Function ficus#view#tagview#OpenTag() {{{1
+" Function ficus#view#tagview#OpenTag(...) {{{1
 " Open the noteview of the tag under the cursor.
 " Args:
+"   ...: string -> The target tag name
 " Return:
-function! ficus#view#tagview#OpenTag() abort
-    let tag = ficus#view#tagview#GetCursorTag()
+function! ficus#view#tagview#OpenTag(...) abort
+    let tag = a:0 > 0 ? a:1 : ficus#view#tagview#GetCursorTag()
     if empty(tag)
         return 0
     endif
