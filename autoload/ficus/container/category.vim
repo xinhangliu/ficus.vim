@@ -10,19 +10,19 @@ function! ficus#container#category#New(name) abort
     let newObj.children = []
     let newObj.notes = []
     let newObj.isOpen = 1
-    let newObj.icon = g:ficus_icons['category']
+    let newObj.icon = ficus#options_dict('ficus_icons', 'category')
     return newObj
 endfunction
 
 " function! s:Category.renderToString(level) abort {{{1
 function! s:Category.renderToString(level) abort
-    let marker = g:ficus_expand_icon[0]
+    let marker = ficus#options_list('ficus_expand_icon', 0)
     if self.isOpen
-        let marker = g:ficus_expand_icon[1]
+        let marker = ficus#options_list('ficus_expand_icon', 1)
     endif
 
     if empty(self.children)
-        let marker = g:ficus_expand_icon[2]
+        let marker = ficus#options_list('ficus_expand_icon', 2)
     endif
 
         let id = self.isRoot() ? s:RootCategoryPrefix . self.id() : self.id()

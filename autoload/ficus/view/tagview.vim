@@ -4,7 +4,7 @@
 " Return:
 function! ficus#view#tagview#GetCursorTag() abort
     let line = getline('.')
-    let matched = matchlist(line, '\v^\s*' . g:ficus_icons['tag'] . '(.*)\s\(\d+\)$')
+    let matched = matchlist(line, '\v^\s*' . ficus#options_dict('ficus_icons', 'tag') . '(.*)\s\(\d+\)$')
     if empty(matched)
         return {}
     endif
@@ -21,11 +21,11 @@ endfunction
 "   : number -> 0 if equal, 1 if greater, -1 if less.
 function! s:CompareTag(tag, other) abort
     let ret = 0
-    if g:ficus_tag_sort_order[0] ==# 'name'
+    if ficus#options_list('ficus_tag_sort_order', 0) ==# 'name'
         if a:tag.name !=# a:other.name
             let ret = a:tag.name > a:other.name ? 1 : -1
         endif
-    elseif g:ficus_tag_sort_order[0] ==# 'count'
+    elseif ficus#options_list('ficus_tag_sort_order', 0) ==# 'count'
         if a:tag.notesCount() !=# a:other.notesCount()
             let ret = a:tag.notesCount() > a:other.notesCount() ? 1 : -1
         endif
@@ -42,7 +42,7 @@ function! ficus#view#tagview#Render() abort
 
     let tags = copy(g:Ficus.tags.children)
     let tags = sort(tags, function('<SID>CompareTag'))
-    if g:ficus_tag_sort_order[1] != 0
+    if ficus#options_list('ficus_tag_sort_order', 1) != 0
         let tags = reverse(tags)
     endif
 

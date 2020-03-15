@@ -1,36 +1,79 @@
 scriptencoding utf-8
 
 " Global variables {{{1
-let g:ficus_expand_icon = get(g:, 'ficus_expand_icon', ['▶ ', '▼ ', '  '])
-let g:ficus_icons = get(g:, 'ficus_icons', {})
-let g:ficus_icons['category'] = get(g:ficus_icons, 'category', '')
-let g:ficus_icons['inbox'] = get(g:ficus_icons, 'inbox', '')
-let g:ficus_icons['recent'] = get(g:ficus_icons,  'recent', '')
-let g:ficus_icons['all'] = get(g:ficus_icons, 'all', '')
-let g:ficus_icons['tag'] = get(g:ficus_icons, 'tag', '')
-let g:ficus_notes_seperator = get(g:, 'ficus_notes_seperator', '-')
-let g:ficus_date_format = get(g:, 'ficus_date_format', '%Y-%m-%dT%H:%M:%S%z')
-let g:ficus_category_recent_offset_days = get(g:, 'ficus_category_recent_offset_days', 7)
-let g:ficus_category_open_max_level = get(g:, 'ficus_category_open_max_level', 2)
-let g:ficus_note_sort_order = get(g:, 'ficus_note_sort_order', ['modified', 1])
-let g:ficus_tag_sort_order = get(g:, 'ficus_tag_sort_order', ['count', 1])
-let g:ficus_winwidth = get(g:, 'ficus_winwidth', 35)
-let g:ficus_newnote_header = get(g:, 'ficus_newnote_header',
-            \ "---\n" .
-            \ "title: {{title}}\n" .
-            \ "created: {{created}}\n" .
-            \ "modified: {{modified}}\n" .
-            \ "category: {{category}}\n" .
-            \ "tags: {{tags}}\n" .
-            \ "author: {{author}}\n" .
-            \ "description: {{description}}\n" .
-            \ "---\n")
-let g:ficus_dir = get(g:, 'ficus_dir', '~/Documents/ficus')
-let g:ficus_dir = substitute(g:ficus_dir, '\v/$', '', '')
-let g:ficus_dir = expand(g:ficus_dir)
-let g:ficus_note_extension = get(g:, 'ficus_note_extension', 'md')
-let g:ficus_delete_command = get(g:, 'ficus_delete_command', 'rm -rf')
-let g:ficus_auto_update_lastmod = get(g:, 'ficus_auto_update_lastmod', 0)
+let s:DEFAULT_OPTIONS = {
+            \ 'ficus_expand_icon': ['▶ ', '▼ ', '  '],
+            \ 'ficus_icons': {
+                \ 'category': '',
+                \ 'inbox': '',
+                \ 'recent': '',
+                \ 'all': '',
+                \ 'tag': '',
+            \},
+            \ 'ficus_notes_seperator': '-',
+            \ 'ficus_date_format': '%Y-%m-%dT%H:%M:%S%z',
+            \ 'ficus_category_recent_offset_days': 7,
+            \ 'ficus_category_open_max_level': 2,
+            \ 'ficus_note_sort_order': ['modified', 1],
+            \ 'ficus_tag_sort_order': ['count', 1],
+            \ 'ficus_winwidth': 35,
+            \ 'ficus_newnote_header':
+                \ "---\n" .
+                \ "title: {{title}}\n" .
+                \ "created: {{created}}\n" .
+                \ "modified: {{modified}}\n" .
+                \ "category: {{category}}\n" .
+                \ "tags: {{tags}}\n" .
+                \ "author: {{author}}\n" .
+                \ "description: {{description}}\n" .
+                \ "---\n",
+            \ 'ficus_dir': '~/Documents/ficus',
+            \ 'ficus_note_extension': 'md',
+            \ 'ficus_delete_command': 'rm -rf',
+            \ 'ficus_auto_update_lastmod': 0,
+            \}
+
+" Function ficus#options(option) {{{1
+" Get option
+" Args:
+"   option: string -> The option name
+" Return: the option value
+function! ficus#options(option) abort
+    let default = s:DEFAULT_OPTIONS[a:option]
+    return get(g:, a:option, default)
+endfunction
+
+" Function ficus#options_list(option, ...) {{{1
+" Get list type option
+" Args:
+"   option: string -> The option name
+"   ...: number -> The index of the target value in list
+" Return: if the index is given, returns the target value in list, other wise
+"   returns the whole list
+function! ficus#options_list(option, ...) abort
+    let opt = get(g:, a:option, s:DEFAULT_OPTIONS[a:option])
+    if type(opt) != type([])
+        throw '`g:' . a:option . '` should be a list'
+    endif
+    return a:0 > 0 ? opt[a:1] : opt
+endfunction
+
+" Function ficus#options_dict(option, ...) {{{1
+" Get dict type option
+" Args:
+"   option: string -> The option name
+"   ---: string -> the key name of the target value in dict
+" Return: if the key is given, returns the target value in dict, other wise
+"   returns the whole dict
+function! ficus#options_dict(option, ...) abort
+    let default = s:DEFAULT_OPTIONS[a:option]
+    let override = get(g:, a:option, {})
+    if type(override) != type({})
+        throw '`g:' . a:option . '` should be a dict'
+    endif
+    let opt = extend(default, override)
+    return a:0 > 0 ? opt[a:1] : opt
+endfunction
 
 " Function s:EchoError(msg) {{{1
 " Echo the given message with ErrorMsg highlight.
@@ -53,7 +96,7 @@ function! s:CheckRequirements() abort
         return s:requirements_satisfied
     endif
 
-    if g:ficus_note_extension ==# 'md'
+    if ficus#options('ficus_note_extension') ==# 'md'
         if !has('python3')
             call s:EchoError('Python3 support is required.')
             return 0
@@ -84,9 +127,9 @@ function! s:Init() abort
     let g:Ficus.categoryRecent = ficus#container#category#New('Recent')
     let g:Ficus.categoryAll = ficus#container#category#New('All')
 
-    let g:Ficus.categoryInbox.icon = g:ficus_icons['inbox']
-    let g:Ficus.categoryRecent.icon = g:ficus_icons['recent']
-    let g:Ficus.categoryAll.icon = g:ficus_icons['all']
+    let g:Ficus.categoryInbox.icon = ficus#options_dict('ficus_icons', 'inbox')
+    let g:Ficus.categoryRecent.icon = ficus#options_dict('ficus_icons', 'recent')
+    let g:Ficus.categoryAll.icon = ficus#options_dict('ficus_icons', 'all')
 
     let g:Ficus.categoryRoot = ficus#container#category#New('Root')
     let g:Ficus.tags = ficus#container#category#New('Tags')
@@ -103,10 +146,11 @@ function! s:Init() abort
 
     call ficus#automatic#AutoUpdateView()
 
-    if !isdirectory(g:ficus_dir)
-        call mkdir(g:ficus_dir, 'p')
+    let ficus_dir = expand(ficus#options('ficus_dir'))
+    if !isdirectory(ficus_dir)
+        call mkdir(ficus_dir, 'p')
     endif
-    call s:UpdateData(g:ficus_dir)
+    call s:UpdateData(ficus#options('ficus_dir'))
 endfunction
 
 " Function s:UpdateData(path) {{{1
@@ -115,7 +159,7 @@ endfunction
 "   path: string -> Parent path of note files.
 " Return:
 function! s:UpdateData(path) abort
-    for f in glob(a:path . '/*.' . g:ficus_note_extension, 0, 1)
+    for f in glob(a:path . '/*.' . ficus#options('ficus_note_extension'), 0, 1)
         call s:AddNote(f)
     endfor
 endfunction
@@ -153,8 +197,8 @@ function! s:AddNote(path) abort
             call parent.addChild(categoryNode)
         endif
 
-        if '' . g:ficus_category_open_max_level ==# '$'
-                    \ || level <= g:ficus_category_open_max_level
+        if '' . ficus#options('ficus_category_open_max_level') ==# '$'
+                    \ || level <= ficus#options('ficus_category_open_max_level')
             let categoryNode.isOpen = 1
         else
             let categoryNode.isOpen = 0
@@ -178,10 +222,10 @@ function! s:AddNote(path) abort
         call tag.addNote(note)
     endfor
 
-    let current_date = strftime(g:ficus_date_format, localtime()
-                \ - g:ficus_category_recent_offset_days * 24 * 60 * 60)
+    let current_date = strftime(ficus#options('ficus_date_format'), localtime()
+                \ - ficus#options('ficus_category_recent_offset_days') * 24 * 60 * 60)
     if !empty(note.modified)
-                \ && ficus#util#CompareDate(note.modified, current_date, g:ficus_date_format) > 0
+                \ && ficus#util#CompareDate(note.modified, current_date, ficus#options('ficus_date_format')) > 0
         call g:Ficus.categoryRecent.addNote(note)
     endif
 endfunction
@@ -234,7 +278,7 @@ function! ficus#CreateNote() abort
         return
     endif
 
-    let note_path = g:ficus_dir . '/' . fname . '.' . g:ficus_note_extension
+    let note_path = expand(ficus#options('ficus_dir')) . '/' . fname . '.' . ficus#options('ficus_note_extension')
     if filereadable(note_path)
         echohl WarningMsg
         echo 'File already exists!'
@@ -265,11 +309,11 @@ function! ficus#CreateNote() abort
         endif
     endif
 
-    let header = copy(g:ficus_newnote_header)
+    let header = copy(ficus#options('ficus_newnote_header'))
     let header = substitute(header, '\v\{\{category}\}', join(note_category, '/'), 'g')
     let header = substitute(header, '\v\{\{tags\}\}', '[' . join(note_tags, ', ') . ']', 'g')
 
-    let date = strftime(g:ficus_date_format)
+    let date = strftime(ficus#options('ficus_date_format'))
     let header = substitute(header, '\v\{\{created\}\}', date, 'g')
     let header = substitute(header, '\v\{\{modified\}\}', date, 'g')
     let header = substitute(header, '\v\{\{[^\{\}]+\}\}', '', 'g')
@@ -317,7 +361,7 @@ function! ficus#UpdateLastmod() abort
     endwhile
 
     if target_valid && target_lineno
-        let date = strftime(g:ficus_date_format)
+        let date = strftime(ficus#options('ficus_date_format'))
         let date = substitute(date, '#', '\#', 'g')
         silent execute target_lineno . ',' . target_lineno . 's#\v^modified:\s*\zs.*\ze$#' . date . '#e'
         call setpos('.', saved_curosr)

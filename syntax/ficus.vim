@@ -1,5 +1,5 @@
-let markers = '(' . escape(join(g:ficus_expand_icon, '|'), '+-~*.#') . ')'
-let icons = '(' . escape(join(values(g:ficus_icons), '|'), '+-~*.#') . ')'
+let markers = '(' . escape(join(ficus#options_list('ficus_expand_icon'), '|'), '+-~*.#') . ')'
+let icons = '(' . escape(join(values(ficus#options_dict('ficus_icons')), '|'), '+-~*.#') . ')'
 
 execute 'syntax match FicusCategory #\v^\{\{.*\}\}\s*' . markers . icons . '.*# contains=FicusNoteCount,FicusCategoryID,FicusCategoryMarker'
 

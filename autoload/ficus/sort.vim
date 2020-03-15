@@ -1,9 +1,9 @@
 " function! ficus#sort#Sort(view, by) abort {{{1
 function! ficus#sort#Sort(view, by) abort
     if a:view ==# 'note'
-        let sort_order = g:ficus_note_sort_order
+        let sort_order = ficus#options_list('ficus_note_sort_order')
     elseif a:view ==# 'tag'
-        let sort_order = g:ficus_tag_sort_order
+        let sort_order = ficus#options_list('ficus_tag_sort_order')
     else
         return
     endif
@@ -17,9 +17,9 @@ endfunction
 " function! ficus#sort#SortReverse(view) abort {{{1
 function! ficus#sort#SortReverse(view) abort
     if a:view ==# 'note'
-        let sort_order = g:ficus_note_sort_order
+        let sort_order = ficus#options_list('ficus_note_sort_order')
     elseif a:view ==# 'tag'
-        let sort_order = g:ficus_tag_sort_order
+        let sort_order = ficus#options_list('ficus_tag_sort_order')
     else
         return
     endif
@@ -34,10 +34,10 @@ endfunction
 function! ficus#sort#SortTraverse(view, reverse) abort
     if a:view ==# 'note'
         let sort_options = ['title', 'created', 'modified']
-        let sort_order = g:ficus_note_sort_order
+        let sort_order = ficus#options_list('ficus_note_sort_order')
     elseif a:view ==# 'tag'
         let sort_options = ['name', 'count']
-        let sort_order = g:ficus_tag_sort_order
+        let sort_order = ficus#options_list('ficus_tag_sort_order')
     else
         return
     endif

@@ -1,4 +1,4 @@
-execute 'syntax match FicusTag /\v^\s*' . escape(g:ficus_icons['tag'], '/') . '.*/ contains=FicusTagNoteCount'
+execute 'syntax match FicusTag /\v^\s*' . escape(ficus#options_dict('ficus_icons', 'tag'), '/') . '.*/ contains=FicusTagNoteCount'
 
 syntax match FicusTagNoteCount '\v \(\d+\)$' contained
 

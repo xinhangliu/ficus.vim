@@ -5,7 +5,7 @@ function! ficus#container#tag#New(name) abort
     let newObj = copy(s:Tag)
     let newObj.name = a:name
     let newObj.notes = []
-    let newObj.icon = g:ficus_icons['tag']
+    let newObj.icon = ficus#options_dict('ficus_icons', 'tag')
     return newObj
 endfunction
 

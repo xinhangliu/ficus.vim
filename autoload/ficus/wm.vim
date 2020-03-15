@@ -3,7 +3,7 @@ function! ficus#wm#Open() abort
     if ficuswinnr == -1
         let mode = 'vertical'
         let openpos = 'topleft'
-        let width = g:ficus_winwidth
+        let width = ficus#options('ficus_winwidth')
         execute 'silent keepalt' openpos mode width . 'split' g:Ficus.buffer_name
     elseif winnr() != ficuswinnr
             execute ficuswinnr . 'wincmd w'

@@ -4,7 +4,7 @@
 " Return:
 function! ficus#view#noteview#GetCursorNote() abort
     let linenr = line('.')
-    if getline(linenr) =~# '\v^' . escape(g:ficus_notes_seperator, '+-~') . '+(\d+)?$'
+    if getline(linenr) =~# '\v^' . escape(ficus#options('ficus_notes_seperator'), '+-~') . '+(\d+)?$'
         return {}
     endif
 
@@ -38,16 +38,16 @@ endfunction
 "   : number -> 0 if equal, 1 if greater, -1 if less.
 function! s:CompareNote(note, other) abort
     let ret = 0
-    if index(['title'], g:ficus_note_sort_order[0]) >= 0
-        let str1 = get(a:note, g:ficus_note_sort_order[0], '')
-        let str2 = get(a:other, g:ficus_note_sort_order[0], '')
+    if index(['title'], ficus#options_list('ficus_note_sort_order', 0)) >= 0
+        let str1 = get(a:note, ficus#options_list('ficus_note_sort_order', 0), '')
+        let str2 = get(a:other, ficus#options_list('ficus_note_sort_order', 0), '')
         if str1 !=# str2
             let ret = str1 ># str2 ? 1 : -1
         endif
-    elseif index(['created', 'modified'], g:ficus_note_sort_order[0]) >= 0
-        let str1 = get(a:note, g:ficus_note_sort_order[0], '')
-        let str2 = get(a:other, g:ficus_note_sort_order[0], '')
-        let ret = ficus#util#CompareDate(str1, str2, g:ficus_date_format)
+    elseif index(['created', 'modified'], ficus#options_list('ficus_note_sort_order', 0)) >= 0
+        let str1 = get(a:note, ficus#options_list('ficus_note_sort_order', 0), '')
+        let str2 = get(a:other, ficus#options_list('ficus_note_sort_order', 0), '')
+        let ret = ficus#util#CompareDate(str1, str2, ficus#options('ficus_date_format'))
     endif
 
     return ret
@@ -59,11 +59,11 @@ endfunction
 "   notes: List[Note] -> The notes list to render.
 " Return:
 function! ficus#view#noteview#Render(notes) abort
-    let output = repeat(g:ficus_notes_seperator, g:ficus_winwidth) . "\n"
+    let output = repeat(ficus#options('ficus_notes_seperator'), ficus#options('ficus_winwidth')) . "\n"
 
     let notes = copy(a:notes)
     let notes = sort(notes, function('<SID>CompareNote'))
-    if g:ficus_note_sort_order[1] != 0
+    if ficus#options_list('ficus_note_sort_order', 1) != 0
         let notes = reverse(notes)
     endif
 
@@ -80,7 +80,7 @@ function! ficus#view#noteview#Render(notes) abort
         if !empty(tag_str)
             let output .= tag_str . "\n"
         endif
-        let output .= repeat(g:ficus_notes_seperator, g:ficus_winwidth - len(note.id)) . note.id . "\n"
+        let output .= repeat(ficus#options('ficus_notes_seperator'), ficus#options('ficus_winwidth') - len(note.id)) . note.id . "\n"
     endfor
 
     return output
@@ -114,7 +114,7 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
     elseif win_count == 1
         execute 'silent keepalt vertical rightbelow split' note.path
         execute current_winnr . 'wincmd w'
-        execute 'vertical resize' g:ficus_winwidth
+        execute 'vertical resize' ficus#options('ficus_winwidth')
         wincmd p
     elseif win_count >= 2
         execute previous_winnr . 'wincmd w'
@@ -131,7 +131,7 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
         endif
     endif
 
-    if g:ficus_auto_update_lastmod
+    if ficus#options('ficus_auto_update_lastmod')
         call ficus#automatic#AutoUpdateLastmod(note)
     endif
 
@@ -165,7 +165,7 @@ function! ficus#view#noteview#Rename() abort
     endif
 
     let msg = "Confirm renaming: '" . fnamemodify(note.path, ':p:t')
-                \. "' -> '" . new_name . '.' . g:ficus_note_extension . "'"
+                \. "' -> '" . new_name . '.' . ficus#options('ficus_note_extension') . "'"
     let choice = confirm(msg, "&Yes\n&No", 2)
     if choice == 1
         call note.rename(new_name)
@@ -186,7 +186,7 @@ function! ficus#view#noteview#DeleteNote() abort
     let msg = 'Confirm deleting: ' . note.path
     let choice = confirm(msg, "&Yes\n&No", 2)
     if choice == 1
-        call system(g:ficus_delete_command . ' ' . shellescape(note.path))
+        call system(ficus#options('ficus_delete_command') . ' ' . shellescape(note.path))
         if v:shell_error == 0
             call ficus#RemoveNote(note)
             echo 'Note deleted'
