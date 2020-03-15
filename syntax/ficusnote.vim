@@ -1,5 +1,5 @@
 syntax region FicusNoteTitle matchgroup=FicusNoteID start='\v^\[\d+\]' end='$' concealends
-execute 'syntax match FicusNoteSeperator /\v^\' . ficus#options('ficus_notes_seperator') . '+(\d+)?$/'
+execute 'syntax match FicusNoteSeperator /\v^\' . ficus#options('ficus_border_char') . '+(\d+)?$/'
 syntax match FicusNoteTagLine '\v^(#[^#]*)+$' contains=FicusNoteTag
 syntax match FicusNoteTag '\v#[^#]*\ze #' contained
 syntax match FicusNoteTag '\v#[^#]*$' contained

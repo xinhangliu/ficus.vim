@@ -10,7 +10,7 @@ let s:DEFAULT_OPTIONS = {
                 \ 'all': '',
                 \ 'tag': '',
             \},
-            \ 'ficus_notes_seperator': '-',
+            \ 'ficus_border_char': '-',
             \ 'ficus_date_format': '%Y-%m-%dT%H:%M:%S%z',
             \ 'ficus_category_recent_offset_days': 7,
             \ 'ficus_category_open_max_level': 2,

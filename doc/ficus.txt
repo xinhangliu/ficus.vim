@@ -307,7 +307,7 @@ OPTIONS                                                         *ficus-options*
 
   Default: `['count', 1]`
 
-*g:ficus_notes_seperator*
+*g:ficus_border_char*
   A character used to construct the seperator of notes list.
 
   Default: `'-'`

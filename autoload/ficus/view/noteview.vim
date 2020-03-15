@@ -4,7 +4,7 @@
 " Return:
 function! ficus#view#noteview#GetCursorNote() abort
     let linenr = line('.')
-    if getline(linenr) =~# '\v^' . escape(ficus#options('ficus_notes_seperator'), '+-~') . '+$'
+    if getline(linenr) =~# '\v^' . escape(ficus#options('ficus_border_char'), '+-~') . '+$'
         return {}
     endif
 
@@ -59,7 +59,7 @@ endfunction
 "   notes: List[Note] -> The notes list to render.
 " Return:
 function! ficus#view#noteview#Render(notes) abort
-    let output = repeat(ficus#options('ficus_notes_seperator'), ficus#options('ficus_winwidth')) . "\n"
+    let output = repeat(ficus#options('ficus_border_char'), ficus#options('ficus_winwidth')) . "\n"
 
     let notes = copy(a:notes)
     let notes = sort(notes, function('<SID>CompareNote'))
@@ -76,7 +76,7 @@ function! ficus#view#noteview#Render(notes) abort
         if !empty(note.tags)
             let output .= '#' . join(note.tags, ' #') . "\n"
         endif
-        let output .= repeat(ficus#options('ficus_notes_seperator'), ficus#options('ficus_winwidth')) . "\n"
+        let output .= repeat(ficus#options('ficus_border_char'), ficus#options('ficus_winwidth')) . "\n"
     endfor
 
     return output
