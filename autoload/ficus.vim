@@ -310,13 +310,14 @@ function! ficus#CreateNote() abort
     endif
 
     let header = copy(ficus#options('ficus_newnote_header'))
-    let header = substitute(header, '\v\{\{category}\}', join(note_category, '/'), 'g')
+    let header = substitute(header, '\v\{\{title\}\}', fname, 'g')
+    let header = substitute(header, '\v\{\{category\}\}', join(note_category, '/'), 'g')
     let header = substitute(header, '\v\{\{tags\}\}', '[' . join(note_tags, ', ') . ']', 'g')
 
     let date = strftime(ficus#options('ficus_date_format'))
     let header = substitute(header, '\v\{\{created\}\}', date, 'g')
     let header = substitute(header, '\v\{\{modified\}\}', date, 'g')
-    let header = substitute(header, '\v\{\{[^\{\}]+\}\}', '', 'g')
+    let header = substitute(header, '\v\s+\{\{[^\{\}]+\}\}', '', 'g')
 
     call writefile(split(header, "\n"), note_path)
     call s:AddNote(note_path)
