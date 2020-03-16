@@ -1,8 +1,9 @@
 scriptencoding utf-8
 
 " Global variables {{{1
+let use_unicode = &encoding == "utf-8"
 let s:DEFAULT_OPTIONS = {
-            \ 'ficus_expand_icon': ['▶ ', '▼ ', '  '],
+            \ 'ficus_expand_icon': use_unicode ? ['▶ ', '▼ ', '  '] : ['+ ', '- ', '  '],
             \ 'ficus_icons': {
                 \ 'category': '',
                 \ 'inbox': '',
@@ -10,7 +11,7 @@ let s:DEFAULT_OPTIONS = {
                 \ 'all': '',
                 \ 'tag': '',
             \},
-            \ 'ficus_border_char': '-',
+            \ 'ficus_border_char': use_unicode ? '─' : '-',
             \ 'ficus_date_format': '%Y-%m-%dT%H:%M:%S%z',
             \ 'ficus_category_recent_offset_days': 7,
             \ 'ficus_category_open_max_level': 2,
