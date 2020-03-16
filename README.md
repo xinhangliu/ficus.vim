@@ -4,11 +4,7 @@
 
 **⚠️ This project is still a work in progress, use at your own risk.**
 
-![CategoryView](https://user-images.githubusercontent.com/21138560/63208187-b65b2500-c103-11e9-8ccc-920ada8635e7.png)
-
-![TagView](https://user-images.githubusercontent.com/21138560/63208194-c541d780-c103-11e9-96a1-eda8b359d4d1.png)
-
-![NoteView](https://user-images.githubusercontent.com/21138560/63208198-ca068b80-c103-11e9-9118-fa1313c8334d.png)
+<img width="24%" alt="cateogry" src="https://user-images.githubusercontent.com/21138560/76740497-f1602c80-67a8-11ea-9310-7a1ad15fa8f5.png"> <img width="24%" alt="tags" src="https://user-images.githubusercontent.com/21138560/76740517-fcb35800-67a8-11ea-95e0-4e6d9bf60876.png"> <img width="24%" alt="notes" src="https://user-images.githubusercontent.com/21138560/76740506-f7560d80-67a8-11ea-88af-376f4e927d51.png"> <a href="https://asciinema.org/a/PPBgcFzqzGT7jj5uc2wwpANYv" target="_blank"><img width="23%" src="https://asciinema.org/a/PPBgcFzqzGT7jj5uc2wwpANYv.svg" /></a>
 
 ## Introduction
 
