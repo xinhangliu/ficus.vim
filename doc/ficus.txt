@@ -40,9 +40,7 @@ close to your notes is more convenient for referencing.
 You can custom the library path by |g:ficus_dir| option.
 
 Advantages:
-    1. links to attachments/notes works in any situation. You can jump to the
-       note under the cursor with |gf| in vim. Other tools can find the
-       attachments without problem.
+    1. Internal links work seamlessly. You can jump to them with |gf|.
     2. Putting all notes within the same folder can shorten the link length.
        They can be easily autocompleted with |i_CTRL-X_CTRL-F| in vim.
 
@@ -261,7 +259,7 @@ OPTIONS                                                         *ficus-options*
   opened category; The 2nd item is for the collapsed category; The 3th item
   is for the empty category (both opened and collapsed).
 
-  Default: `['▶ ', '▼ ', '  ']`
+  Default: `['+ ', '- ', '  ']` or `['▶ ', '▼ ', '  ']` (utf-8)
 
 *g:ficus_icons*
   A |Dict| sets the icons of different types of categories.
@@ -310,7 +308,7 @@ OPTIONS                                                         *ficus-options*
 *g:ficus_border_char*
   A character used to construct the seperator of notes list.
 
-  Default: `'-'`
+  Default: `'-'` or `'─'` (utf-8)
 
 *g:ficus_newnote_header*
   A |string| sets the default template of new note creation. The template
