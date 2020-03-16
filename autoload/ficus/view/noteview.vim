@@ -127,6 +127,11 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
         endif
     endif
 
+    if &filetype !~# '\v^ficusnote\.*'
+        let ft = 'ficusnote.' . &filetype
+        execute 'setlocal filetype=' . ft
+    endif
+
     if ficus#options('ficus_auto_update_lastmod')
         call ficus#automatic#AutoUpdateLastmod(note)
     endif

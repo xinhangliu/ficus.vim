@@ -14,10 +14,10 @@ function! ficus#render#Render(view) abort
         setlocal filetype=ficus
     elseif a:view ==# 'note'
         let output = ficus#view#noteview#Render(g:Ficus.current_notes)
-        setlocal filetype=ficusnote
+        setlocal filetype=ficusnotes
     elseif a:view ==# 'tag'
         let output = ficus#view#tagview#Render()
-        setlocal filetype=ficustag
+        setlocal filetype=ficustags
     else
         return
     endif

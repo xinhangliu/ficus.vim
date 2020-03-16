@@ -12,7 +12,7 @@ function! ficus#wm#Open() abort
     if g:Ficus.current_view ==# 'category'
         setlocal filetype=ficus
     elseif g:Ficus.current_view ==# 'note'
-        setlocal filetype=ficusnote
+        setlocal filetype=ficusnotes
     endif
 
     call ficus#render#Render(g:Ficus.current_view)

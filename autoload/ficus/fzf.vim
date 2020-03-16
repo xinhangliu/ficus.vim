@@ -3,6 +3,7 @@ if !exists('g:Ficus')
 endif
 " Categories {{{1
 function! ficus#fzf#categories(...) abort
+    stopinsert
     return fzf#run(fzf#wrap(
                 \ 'ficus-categories',
                 \ {
@@ -20,6 +21,7 @@ endfunction
 " }}}
 " Tags {{{1
 function! ficus#fzf#tags(...) abort
+    stopinsert
     return fzf#run(fzf#wrap(
                 \ 'ficus-tags',
                 \ {
@@ -41,6 +43,7 @@ endfunction
 " }}}
 " Notes {{{1
 function! ficus#fzf#notes(...) abort
+    stopinsert
     return fzf#run(fzf#wrap(
                 \ 'ficus-notes',
                 \ {

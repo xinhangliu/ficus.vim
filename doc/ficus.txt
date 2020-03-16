@@ -439,5 +439,13 @@ Requirement: https://github.com/junegunn/fzf
   separated tags will be inserted into the current buffer.
 
 Tips: For better experience, map the functions to custom keys.
+  For example: >
+    augroup ficus
+        autocmd!
+        autocmd FileType ficusnote.* inoremap @c <C-r>=ficus#fzf#categories()<CR>
+        autocmd FileType ficusnote.* inoremap @n <C-r>=ficus#fzf#notes()<CR>
+        autocmd FileType ficusnote.* inoremap @t <C-r>=ficus#fzf#tags()<CR>
+    augroup END
+<
 
 vim:tw=78:ts=8:ft=help:norl:
