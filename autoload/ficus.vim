@@ -32,6 +32,7 @@ let s:DEFAULT_OPTIONS = {
             \ 'ficus_note_extension': 'md',
             \ 'ficus_delete_command': 'rm -rf',
             \ 'ficus_auto_update_lastmod': 0,
+            \ 'ficus_assets_dir': 'assets',
             \}
 
 " Function ficus#options(option) {{{1

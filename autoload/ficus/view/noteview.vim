@@ -132,6 +132,8 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
         execute 'setlocal filetype=' . ft
     endif
 
+    let b:is_ficusnote = v:true
+
     if ficus#options('ficus_auto_update_lastmod')
         call ficus#automatic#AutoUpdateLastmod(note)
     endif
