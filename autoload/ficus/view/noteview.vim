@@ -196,7 +196,7 @@ function! ficus#view#noteview#DeleteNote() abort
         call system(ficus#options('ficus_delete_command') . ' ' . shellescape(note.path))
         if v:shell_error == 0
             call ficus#RemoveNote(note)
-            echo 'Note deleted'
+            call ficus#util#Info('Note deleted')
         else
             call ficus#util#Warning('Failed to delete note.')
         endif

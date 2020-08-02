@@ -113,7 +113,7 @@ function! ficus#view#categoryview#Rename() abort
     endif
 
     if category.isRoot()
-        echo 'Cannot rename this category.'
+        call ficus#util#Info('Cannot rename this category.')
         return
     endif
 
