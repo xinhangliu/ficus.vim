@@ -1,6 +1,34 @@
-function! s:Curl(url, dest) abort
-    let s = system('curl -L ' . shellescape(a:url) . ' -o ' . shellescape(a:dest))
-    return s
+if !exists('b:is_ficusnote')
+    finish
+endif
+
+function! s:DownloadAsync(url, dest) abort
+    let cmd = ['curl', '-L', a:url, '-o', a:dest]
+    let options = {'exit_cb': function('s:Handler')}
+    let job = job_start(cmd, options)
+endfunction
+
+function s:Handler(job, exitval) abort
+    if a:exitval != 0
+        let info = job_info(a:job)
+        let cmd = info['cmd']
+        let url = cmd[2]
+        let dest = cmd[4]
+        call ficus#util#Error('Failed to collect the asset "' . url . '"')
+        let failed = fnamemodify(dest, ':h')
+                    \ . '/' . ficus#options('ficus_assets_failed_filename')
+        if filereadable(failed)
+            let failed_urls = system('cat '.shellescape(failed))
+            if stridx(failed_urls, url) != -1
+                return
+            endif
+        endif
+        call system(printf('echo %s >> %s', shellescape(url), shellescape(failed)))
+        if v:shell_error
+            call ficus#util#Error('Failed to cache the url: "' . url . '"')
+            return
+        endif
+    endif
 endfunction
 
 function! s:ResolveUrl(text) abort
@@ -22,29 +50,54 @@ function! s:ResolveUrl(text) abort
     endif
 endfunction
 
-function! ficus#asset#Collect(bang) abort
-    if !exists('b:is_ficusnote')
-        return
-    endif
+function! s:ReplaceText(pos, old, new) abort
+    let line = getline(a:pos[1])
+    let ccol = a:pos[2]
+    let idx_start = stridx(line, a:old)
+    while idx_start + strlen(a:old) <= ccol - 1
+        let idx_start = stridx(line, a:old, idx_start + 1)
+    endwhile
+    let start_pos = copy(a:pos)
+    let start_pos[2] = idx_start + 1
+    let end_pos = copy(a:pos)
+    let end_pos[2] = idx_start + strlen(a:old)
+    call setpos("'<", start_pos)
+    call setpos("'>", end_pos)
+    let reg_saved = getreg('a')
+    call setreg('a', a:new)
+    execute 'normal! gv"ap'
+    call setreg('a', reg_saved)
+    call setpos('.', a:pos)
+endfunction
 
-    let text = expand('<cfile>')
-    let ccol = col('.')
+function! s:InsertText(pos, text) abort
+    call setpos('.', a:pos)
+    let reg_saved = getreg('a')
+    call setreg('a', a:text)
+    execute 'normal! "ap'
+    call setreg('a', reg_saved)
+    call setpos('.', a:pos)
+endfunction
+
+function! ficus#asset#Collect(bang, url = v:none) abort
+    let text = empty(a:url) ? expand('<cfile>') : a:url
     let pos_saved = getpos('.')
-    let line = getline('.')
 
     " If assets dir of note is not exists, create it
     let note_name = expand('%:p:t:r')
     let note_assets_dir = ficus#options('ficus_assets_dir') . '/' . note_name
     if !isdirectory(note_assets_dir)
         call system('mkdir -p ' . fnameescape(note_assets_dir))
+        if v:shell_error
+            call ficus#util#Error('Failed to create the assets dir: "' . note_assets_dir . '"')
+            return
+        endif
     endif
 
     " Infer the filename from the url
     let url_and_fname = s:ResolveUrl(text)
     if empty(url_and_fname)
-        echohl ErrorMsg
-        echo '[Ficus] Unresolved url "' . text . '"'
-        echohl None
+        call ficus#util#Error('Unresolved url: "' . text . '"')
         return
     endif
     let [url, fname] = url_and_fname
@@ -71,8 +124,7 @@ function! ficus#asset#Collect(bang) abort
         let fname_new = input('New name: ', fname)
         if fname_new ==# '' || fname_new ==# fname
             let download_needed = v:false
-            " TODO: clean commandline first
-            echo '[Ficus] Reuse the existed asset "' . fname . '"'
+            call ficus#util#Info('Reuse the existed asset: "' . fname . '"')
         else
             let fname = fname_new
             let dest = expand(ficus#options('ficus_dir'))
@@ -82,52 +134,66 @@ function! ficus#asset#Collect(bang) abort
     endif
 
     " Modify the url in the content
-    let idx_start = stridx(line, text)
-    while idx_start + strlen(text) <= ccol - 1
-        let idx_start = stridx(line, text, idx_start + 1)
-    endwhile
-    let start_pos = copy(pos_saved)
-    let start_pos[2] = idx_start + 1
-    let end_pos = copy(pos_saved)
-    let end_pos[2] = idx_start + strlen(text)
-    call setpos("'<", start_pos)
-    call setpos("'>", end_pos)
-    let reg_saved = getreg('a')
-    call setreg('a', note_assets_dir . '/' . fname)
-    execute 'normal! gv"ap'
-    call setreg('a', reg_saved)
-
-    call setpos('.', pos_saved)
+    if empty(a:url)
+        call s:ReplaceText(pos_saved, text, note_assets_dir . '/' . fname)
+    else
+        call s:InsertText(pos_saved, note_assets_dir . '/' . fname)
+    endif
 
     " Download the asset
     if download_needed
-        " TODO: Save url to the asset dir if failed to download it
-        " TODO: Async downloading
-        call s:Curl(url, dest)
+        call s:DownloadAsync(url, dest)
     endif
 
     if delete_original_file
-        call system(ficus#options('ficus_delete_command') . ' ' . shellescape(url[7:]))
+        call system(ficus#options('ficus_delete_command').' '.shellescape(url[7:]))
+        if v:shell_error
+            call ficus#util#Error('Failed to delete the original file: "' . url . '"')
+            return
+        endif
     endif
 endfunction
 
 function! ficus#asset#Rename() abort
-    if !exists('b:is_ficusnote')
+    let text = expand('<cfile>')
+    let pos_saved = getpos('.')
+
+    let fname_old = fnamemodify(text, ':t')
+
+    let note_name = expand('%:p:t:r')
+    let note_assets_dir = ficus#options('ficus_assets_dir') . '/' . note_name
+
+    if fnamemodify(text, ':h') != note_assets_dir
+        call ficus#util#Warning('Not an asset')
         return
     endif
 
-endfunction
-
-function! ficus#asset#Delete() abort
-    if !exists('b:is_ficusnote')
+    let abspath_old = expand(ficus#options('ficus_dir')) . '/' . text
+    if !filereadable(abspath_old)
+        call ficus#util#Warning('Asset invalid: "' . fname_old . '"')
         return
     endif
 
-endfunction
+    let fname_new = input('New name: ', fname_old)
+    if empty(fname_new) || fname_new == fname_old
+        call ficus#util#Info('File name not changed')
+        return
+    end
 
-function! ficus#asset#InsertImage(url) abort
-    if !exists('b:is_ficusnote')
+    let abspath_new = expand(ficus#options('ficus_dir'))
+                \ . '/' . note_assets_dir
+                \ . '/' . fname_new
+    if filereadable(abspath_new)
+        call ficus#util#Error('Asset already exists: "' . fname_new . '"')
         return
     endif
 
+    call system('mv '.shellescape(abspath_old).' '.shellescape(abspath_new))
+    if v:shell_error
+        call ficus#util#Error('Failed to rename asset: "' . fname_old . '"')
+        return
+    endif
+
+    " Modify the url in the content
+    call s:ReplaceText(pos_saved, text, note_assets_dir . '/' . fname_new)
 endfunction

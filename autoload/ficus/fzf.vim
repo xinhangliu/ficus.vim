@@ -1,6 +1,10 @@
 if !exists('g:Ficus')
     finish
 endif
+
+if !exists('b:is_ficusnote')
+    finish
+endif
 " Categories {{{1
 function! ficus#fzf#categories(...) abort
     stopinsert

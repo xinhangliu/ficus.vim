@@ -19,3 +19,35 @@ except Exception:
 EOF
     return l:ret
 endfunction
+
+function! ficus#util#Error(msg, toHistory = v:true) abort
+    redraw
+    echohl ErrorMsg
+    if a:toHistory
+        echom printf('[Ficus] %s', a:msg)
+    else
+        echo printf('[Ficus] %s', a:msg)
+    endif
+    echohl None
+endfunction
+
+function! ficus#util#Info(msg, toHistory = v:false) abort
+    redraw
+    if a:toHistory
+        echom printf('[Ficus] %s', a:msg)
+    else
+        echo printf('[Ficus] %s', a:msg)
+    endif
+endfunction
+
+function! ficus#util#Warning(msg, toHistory = v:true) abort
+    redraw
+    echohl WarningMsg
+    if a:toHistory
+        echom printf('[Ficus] %s', a:msg)
+    else
+        echo printf('[Ficus] %s', a:msg)
+    endif
+    echohl None
+endfunction
+
