@@ -25,17 +25,13 @@ endfunction
 function! s:Note.rename(new_name) abort
     let new_path = fnamemodify(self.path, ':p:h') . '/' . a:new_name . '.' . ficus#options('ficus_note_extension')
     if filereadable(expand(new_path))
-        echohl ErrorMsg
-            echo 'File already exists!'
-        echohl NONE
+        call ficus#util#Error('File already exists!')
         return
     endif
 
     let ret = system('mv "' . self.path . '" "' . new_path . '"')
     if v:shell_error != 0
-        echohl ErrorMsg
-            echo 'Failed to rename this note.'
-        echohl NONE
+        call ficus#util#Error('Failed to rename this note.')
         return
     endif
     let self.path = new_path

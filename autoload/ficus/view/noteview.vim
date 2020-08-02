@@ -198,9 +198,7 @@ function! ficus#view#noteview#DeleteNote() abort
             call ficus#RemoveNote(note)
             echo 'Note deleted'
         else
-            echohl WarningMsg
-                echo 'Failed to delete note'
-            echohl NONE
+            call ficus#util#Warning('Failed to delete note.')
         endif
     endif
     call ficus#render#Render('note')

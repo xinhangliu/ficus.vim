@@ -79,17 +79,6 @@ function! ficus#options_dict(option, ...) abort
     return a:0 > 0 ? opt[a:1] : opt
 endfunction
 
-" Function s:EchoError(msg) {{{1
-" Echo the given message with ErrorMsg highlight.
-" Args:
-"   msg: string -> The message to display.
-" Return:
-function! s:EchoError(msg) abort
-    echohl ErrorMsg
-    echo '[Ficus] ' . a:msg
-    echohl NONE
-endfunction
-
 " Function s:CheckRequirements() {{{1
 " Check if requirements are satisfied.
 " Args:
@@ -102,7 +91,7 @@ function! s:CheckRequirements() abort
 
     if ficus#options('ficus_note_extension') ==# 'md'
         if !has('python3')
-            call s:EchoError('Python3 support is required.')
+            call ficus#util#Error('Python3 support is required.')
             return 0
         endif
 
@@ -115,7 +104,7 @@ except ImportError:
     vim.command('let l:ret = %d' % 0)
 EOF
         if !l:ret
-            call s:EchoError('ruamel.yaml package is required.')
+            call ficus#util#Error('ruamel.yaml package is required.')
             return 0
         endif
     endif
@@ -276,17 +265,13 @@ function! ficus#CreateNote() abort
                 \ || fname ==# '.'
                 \ || fname ==# '..'
                 \ || fname =~? '\v[\\/:?"<>|\*]'
-        echohl WarningMsg
-        echo 'Filename is not valid.'
-        echohl NONE
+        call ficus#util#Warning('Filename is not valid.')
         return
     endif
 
     let note_path = expand(ficus#options('ficus_dir')) . '/' . fname . '.' . ficus#options('ficus_note_extension')
     if filereadable(note_path)
-        echohl WarningMsg
-        echo 'File already exists!'
-        echohl NONE
+        call ficus#util#Error('File already exists!')
         return
     endif
 
