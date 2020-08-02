@@ -34,7 +34,7 @@ let s:DEFAULT_OPTIONS = {
             \ 'ficus_auto_update_lastmod': 0,
             \ 'ficus_assets_dir': 'assets',
             \ 'ficus_assets_failed_filename': 'assets.failed',
-            \ 'ficus_enable_default_mapping': 1,
+            \ 'ficus_enable_default_note_mapping': 1,
             \}
 
 " Function ficus#options(option) {{{1

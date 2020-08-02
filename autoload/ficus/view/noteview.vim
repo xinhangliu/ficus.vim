@@ -138,7 +138,7 @@ function! ficus#view#noteview#OpenNote(flag, stay) abort
         call ficus#automatic#AutoUpdateLastmod(note)
     endif
 
-    if ficus#options('ficus_enable_default_mapping')
+    if ficus#options('ficus_enable_default_note_mapping')
         call ficus#mapping#SetupNoteMapping()
     endif
 

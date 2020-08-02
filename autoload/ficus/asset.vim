@@ -1,9 +1,21 @@
+" Function s:DownloadAsync(url, dest) {{{1
+" Asynchronously Download from the url, save to the dest.
+" Args:
+"   url: string -> The url to download
+"   dest: string -> The file path to save
+" Return:
 function! s:DownloadAsync(url, dest) abort
     let cmd = ['curl', '-L', a:url, '-o', a:dest]
     let options = {'exit_cb': function('s:Handler')}
     let job = job_start(cmd, options)
 endfunction
 
+" Function s:Handler(job, exitval) {{{1
+" Exit callback function of s:DownloadAsync().
+" Args:
+"   job: Job -> The async job
+"   exitval: number -> The exit code of the job
+" Return:
 function s:Handler(job, exitval) abort
     if a:exitval != 0
         let info = job_info(a:job)
@@ -27,6 +39,13 @@ function s:Handler(job, exitval) abort
     endif
 endfunction
 
+" Function s:ResolveUrl(text) {{{1
+" Construct the url from the text and infer the filename.
+" Args:
+"   text: string -> The original text
+" Return: [url, fname]
+"   url: string -> The constructed url
+"   fname: string -> The infered filename
 function! s:ResolveUrl(text) abort
     if a:text =~? '\v^(http|https|ftp|ftps|file)\:\/\/.*$'
         let fname = fnamemodify(a:text, ':t')
@@ -46,6 +65,13 @@ function! s:ResolveUrl(text) abort
     endif
 endfunction
 
+" Function s:ReplaceText(pos, old, new) {{{1
+" Replace the substring in the current line.
+" Args:
+"   pos: List -> The target position
+"   old: string -> The substring to be replaced
+"   new: string -> The new replacement
+" Return:
 function! s:ReplaceText(pos, old, new) abort
     let line = getline(a:pos[1])
     let ccol = a:pos[2]
@@ -66,6 +92,12 @@ function! s:ReplaceText(pos, old, new) abort
     call setpos('.', a:pos)
 endfunction
 
+" Function s:ReplaceText(pos, text) {{{1
+" Insert the text into the position.
+" Args:
+"   pos: List -> The target position
+"   text: string -> The string to be inserted
+" Return:
 function! s:InsertText(pos, text) abort
     call setpos('.', a:pos)
     let reg_saved = getreg('a')
@@ -75,6 +107,14 @@ function! s:InsertText(pos, text) abort
     call setpos('.', a:pos)
 endfunction
 
+" Function ficus#asset#Collect(bang, url = v:none) {{{1
+" Localize the asset under the cursor. If the url is specified, localize the
+" given url instead.
+" Args:
+"   bang: bool -> If true and the url is a local file, remove the original
+"   file when done
+"   url: string -> The specified url to download, instead of the cursor url
+" Return:
 function! ficus#asset#Collect(bang, url = v:none) abort
     if !exists('b:is_ficusnote')
         return
@@ -154,6 +194,10 @@ function! ficus#asset#Collect(bang, url = v:none) abort
     endif
 endfunction
 
+" Function ficus#asset#Rename() {{{1
+" Rename the asset under the cursor.
+" Args:
+" Return:
 function! ficus#asset#Rename() abort
     if !exists('b:is_ficusnote')
         return
@@ -201,3 +245,5 @@ function! ficus#asset#Rename() abort
     " Modify the url in the content
     call s:ReplaceText(pos_saved, text, note_assets_dir . '/' . fname_new)
 endfunction
+" Modeline {{{1
+" vim:set foldenable foldmethod=marker:

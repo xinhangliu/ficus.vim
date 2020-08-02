@@ -23,6 +23,7 @@ endfunction
 
 " function! s:Note.rename(new_name) abort {{{1
 function! s:Note.rename(new_name) abort
+    " TODO: Rename the assets dir when rename the note
     let new_path = fnamemodify(self.path, ':p:h') . '/' . a:new_name . '.' . ficus#options('ficus_note_extension')
     if filereadable(expand(new_path))
         call ficus#util#Error('File already exists!')

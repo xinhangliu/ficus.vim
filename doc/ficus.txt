@@ -160,6 +160,17 @@ COMMANDS                                                       *ficus-commands*
 
   Reload ficus. Data will be updated from all note files.
 
+:FicusAssetCollect[!] [url]
+
+  Download the url under the cursor and save it to the asset directory. If the
+  url is a local file path, it will be delete with |g:ficus_delete_command|
+  after downloading. If the the optional argument `url` is given, download it
+  instead.
+
+:FicusAssetRename
+
+  Rename the asset under the cursor.
+
 ------------------------------------------------------------------------------
 MAPPINGS                                                       *ficus-mappings*
 
@@ -211,6 +222,20 @@ NoteView~
   sr      Reverse the sorting order.
   ss      Traverse the sorting keys.
   sS      Traverse the sorting keys conversely.
+  --------------------------------------------------------~
+
+NoteMappings~
+
+This mappings can be disable by option |g:ficus_enable_default_note_mapping|.
+
+  --------------------------------------------------------~
+  Mode Key     Description~
+  --------------------------------------------------------~
+  i,n  @c      Select and insert a category with fzf
+  i,n  @n      Select and insert notes with fzf
+  i,n  @t      Select and insert tags with fzf
+  n    @i      Call `FicusAssetCollect(0)`
+  n    @r      Call `FicusAssetRename`
   --------------------------------------------------------~
 
 ------------------------------------------------------------------------------
@@ -326,6 +351,16 @@ OPTIONS                                                         *ficus-options*
     \ "description: {{description}}\n" .
     \ "---\n"
 
+*g:ficus_assets_dir*
+  A |string| sets the default name of the assets directory.
+
+  Default: `assets`
+
+*g:ficus_enable_default_note_mapping*
+  A |boolean| number determines if enable some mappings for the opened notes.
+
+  Default: `1`
+
 *g:ficus_delete_command*
   A |string| sets the shell command for note file deletion.
 
@@ -435,15 +470,5 @@ Requirement: https://github.com/junegunn/fzf
   This function launches fzf to select tags. It accepts one optional |Boolean|
   argument `bang`, if true, it starts fzf in fullscreen mode.  The comma-space
   separated tags will be inserted into the current buffer.
-
-Tips: For better experience, map the functions to custom keys.
-  For example: >
-    augroup ficus
-        autocmd!
-        autocmd FileType ficusnote.* inoremap @c <C-r>=ficus#fzf#categories()<CR>
-        autocmd FileType ficusnote.* inoremap @n <C-r>=ficus#fzf#notes()<CR>
-        autocmd FileType ficusnote.* inoremap @t <C-r>=ficus#fzf#tags()<CR>
-    augroup END
-<
 
 vim:tw=78:ts=8:ft=help:norl:
