@@ -1,7 +1,3 @@
-if !exists('b:is_ficusnote')
-    finish
-endif
-
 function! s:DownloadAsync(url, dest) abort
     let cmd = ['curl', '-L', a:url, '-o', a:dest]
     let options = {'exit_cb': function('s:Handler')}
@@ -80,6 +76,10 @@ function! s:InsertText(pos, text) abort
 endfunction
 
 function! ficus#asset#Collect(bang, url = v:none) abort
+    if !exists('b:is_ficusnote')
+        return
+    endif
+
     let text = empty(a:url) ? expand('<cfile>') : a:url
     let pos_saved = getpos('.')
 
@@ -155,6 +155,10 @@ function! ficus#asset#Collect(bang, url = v:none) abort
 endfunction
 
 function! ficus#asset#Rename() abort
+    if !exists('b:is_ficusnote')
+        return
+    endif
+
     let text = expand('<cfile>')
     let pos_saved = getpos('.')
 
