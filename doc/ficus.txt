@@ -1,4 +1,4 @@
-*ficus.txt* Taking notes with plaintext and Vim.
+*ficus.txt* Flat-file based note-taking app for Vim.
 
 ==============================================================================
 CONTENTS                                                       *ficus-contents*
@@ -100,10 +100,7 @@ REQUIREMENTS                                               *ficus-requirements*
 
 - vim 8
 - Python3
-  - ruamel.yaml
-
-Currently, ficus.vim supports Markdown as note-taking language. python package
-`ruamel.yaml` is required for read&write notes' metadata (YAML Front Matter).
+  - ruamel.yaml: Required for read&write metadata (YAML Front Matter).
 
 ==============================================================================
 USAGE                                                             *ficus-usage*

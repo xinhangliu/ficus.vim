@@ -1,10 +1,17 @@
 # ficus.vim
 
-🌳 Taking notes with plaintext and Vim.
+🌳 Flat-file based note-taking app for Vim
 
 **⚠️ This project is still a work in progress, use at your own risk.**
 
 <img width="24%" alt="cateogry" src="https://user-images.githubusercontent.com/21138560/76740497-f1602c80-67a8-11ea-9310-7a1ad15fa8f5.png"> <img width="24%" alt="tags" src="https://user-images.githubusercontent.com/21138560/76740517-fcb35800-67a8-11ea-95e0-4e6d9bf60876.png"> <img width="24%" alt="notes" src="https://user-images.githubusercontent.com/21138560/76740506-f7560d80-67a8-11ea-88af-376f4e927d51.png"> <a href="https://asciinema.org/a/PPBgcFzqzGT7jj5uc2wwpANYv" target="_blank"><img width="23%" src="https://asciinema.org/a/PPBgcFzqzGT7jj5uc2wwpANYv.svg" /></a>
+
+## Features
+
+- **Vim as editor**: Writing with the beloved text editor.
+- **Flat-file based**: controlling your own data fully.
+- **Category and tag system**: Organizing your notes in a classic way.
+- **Assets management**: Inserting images easily.
 
 ## Introduction
 
@@ -42,30 +49,13 @@ description: This is the description
 Note content goes here ...
 ```
 
-## Features
-
-- **Vim as editor**: Vim is a great editor, and comes with tons of awesome
-plugins which can help you write (highlight, spellcheck, preview, ....).
-- **Flat-file based**: Everything is plain text, backup easily. Even though
-without ficus.vim, you can still access your notes. Data is always with you.
-- **Won't mass with your data**: Ficus.vim requires nothing except a metadata
-header for your note. The internal links of note (attachments, other notes)
-will just work when you open it with other tools.
-- **Infinite category levels**: Organize your notes with a nested tree structure.
-Every note only belongs to one category.
-- **Tag system**: Organize your notes with a flat tag structure. Every note can
-own multiple tags.
-
 ## Installation
 
 ### Requirements
 
 - vim 8
 - Python3
-    - ruamel.yaml
-
-Currently, ficus.vim supports Markdown as note-taking language. python package
-`ruamel.yaml` is required for read&write notes' metadata (YAML Front Matter).
+    - ruamel.yaml: Required for read&write metadata (YAML Front Matter).
 
 ### Install with [vim-plug](https://github.com/junegunn/vim-plug)
 
@@ -89,6 +79,8 @@ window:
 nnoremap <Leader>[ :FicusToggle<CR>
 ```
 
+### Views of ficus.vim
+
 There are 3 views in ficus window:
   - CategoryView: Show the category tree
   - TagView: Show the tags list
@@ -105,4 +97,20 @@ Different views have some unique keybindings. For example:
   - Sort notes by title/created/modified in NoteView: `st/sc/sm`
   - Sort tags by name/count in TagView: `st/sc`
 
-see more details in docs.
+### Assets management
+
+Personally, I don't like external image links. Move the cursor to the link in
+the note, then execute command `:FicusAssetCollect`, it will be downloaded into
+the assets directory. The external link will be replaced with the local one.
+
+`:FicusAssetCollect[!]` also works with local file paths. The file will be
+copied or moved (with `!`) to the assets directory.
+
+`:FicusAssetRename` can rename the asset under the cursor.
+
+see more details in the docs.
+
+## Compatibility
+
+* ✔Unix-like, ✘Windows
+* ✔vim, ✘neovim
