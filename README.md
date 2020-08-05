@@ -9,7 +9,7 @@
 ## Features
 
 - **Vim as editor**: Writing with the beloved text editor.
-- **Flat-file based**: controlling your own data fully.
+- **Flat-file based**: Controlling your own data fully.
 - **Category and tag system**: Organizing your notes in a classic way.
 - **Assets management**: Inserting images easily.
 
